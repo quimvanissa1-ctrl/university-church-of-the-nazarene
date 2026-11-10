@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Quiz Collection</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&amp;family=Libre+Franklin:wght@400;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/games.css">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body { font-family: 'Libre Franklin', sans-serif; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .feedback-correct { color: #2d6a4f; font-weight: 700; }
+    .feedback-wrong { color: #9d0208; font-weight: 700; }
+    .game-card { transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+    .game-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+    @keyframes burst {
+      0% { transform: translate(0,0) scale(1); opacity:1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity:0; }
+    }
+    .level-btn { transition: transform 0.15s, box-shadow 0.15s; }
+    .level-btn:not(:disabled):hover { transform: scale(1.05); }
+    .level-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .progress-stars { display: flex; gap: 4px; justify-content: center; margin-top: 6px; }
+  </style>
+</head>
+<body data-template-id="__page-root" class="min-h-screen flex items-center justify-center p-4" style="background: linear-gradient(135deg, rgb(245, 230, 211), rgb(212, 165, 116));">
+  <div class="home-action-bar">
+    <a href="index.html" class="home-button">Home</a>
+  </div>
+  <div class="w-full max-w-lg mx-auto"><!-- HOME SCREEN -->
+   <section id="home-screen" class="text-center">
+    <div class="rounded-xl overflow-hidden mb-4"><img data-template-id="hero-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="https://images.pexels.com/photos/372326/pexels-photo-372326.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Holy Bible open on a stand inside a church, symbolizing faith and spirituality.">
+    </div>
+    <h1 data-template-id="app-title" class="canva-text text-3xl uppercase tracking-widest mb-1" style="color: rgb(61, 43, 31); font-weight: 900; font-style: normal; font-size: 32px;">Bible Quiz Collection</h1>
+    <p data-template-id="app-subtitle" class="canva-text text-base italic mb-6" style="color: rgb(92, 61, 46); font-weight: 400; font-style: italic; font-size: 16px;">Test your knowledge of Scripture</p>
+    <div class="space-y-3"><button onclick="showLevels('scramble')" data-template-id="menu-card-1" class="canva-card game-card w-full rounded-xl p-5 text-left flex items-center gap-4" style="background: rgb(255, 255, 255);"> <span class="text-3xl">📖</span>
+      <div class="flex-1">
+       <h3 data-template-id="menu-card-1-title" class="canva-text font-bold text-lg" style="color: rgb(61, 43, 31); font-weight: 400; font-style: normal; font-size: 19px;">Books Scramble</h3>
+       <p data-template-id="menu-card-1-desc" class="canva-text text-sm opacity-80" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Unscramble books of the Bible</p>
+       <div class="progress-stars" id="stars-scramble"></div>
+      </div><i data-lucide="chevron-right" class="ml-auto opacity-50" style="width:20px;height:20px;"></i> </button> <button onclick="showLevels('wives')" data-template-id="menu-card-2" class="canva-card game-card w-full rounded-xl p-5 text-left flex items-center gap-4" style="background: rgb(255, 255, 255);"> <span class="text-3xl">💒</span>
+      <div class="flex-1">
+       <h3 data-template-id="menu-card-2-title" class="canva-text font-bold text-lg" style="color: rgb(61, 43, 31); font-weight: 400; font-style: normal; font-size: 19px;">Wives of the Bible</h3>
+       <p data-template-id="menu-card-2-desc" class="canva-text text-sm opacity-80" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Name the wives of Bible characters</p>
+       <div class="progress-stars" id="stars-wives"></div>
+      </div><i data-lucide="chevron-right" class="ml-auto opacity-50" style="width:20px;height:20px;"></i> </button> <button onclick="showLevels('verses')" data-template-id="menu-card-3" class="canva-card game-card w-full rounded-xl p-5 text-left flex items-center gap-4" style="background: rgb(255, 255, 255);"> <span class="text-3xl">✍️</span>
+      <div class="flex-1">
+       <h3 data-template-id="menu-card-3-title" class="canva-text font-bold text-lg" style="color: rgb(61, 43, 31); font-weight: 400; font-style: normal; font-size: 19px;">Memory Verse Fill-in</h3>
+       <p data-template-id="menu-card-3-desc" class="canva-text text-sm opacity-80" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Complete famous Bible verses</p>
+       <div class="progress-stars" id="stars-verses"></div>
+      </div><i data-lucide="chevron-right" class="ml-auto opacity-50" style="width:20px;height:20px;"></i> </button>
+    </div>
+   </section><!-- LEVEL SELECT -->
+   <section id="level-select" class="hidden"><button onclick="goHome()" class="flex items-center gap-1 mb-4 text-sm font-semibold opacity-70 hover:opacity-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back</button>
+    <h2 id="level-select-title" class="text-2xl text-center mb-2 font-bold" style="color:#3d2b1f;font-family:'Playfair Display',serif;">Select Level</h2>
+    <p data-template-id="level-select-hint" class="canva-text text-sm text-center mb-5" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Score 60% to unlock the next level</p>
+    <div id="level-buttons" class="grid grid-cols-1 gap-3"></div>
+   </section><!-- GAME 1: SCRAMBLE -->
+   <section id="game-scramble" class="hidden"><button onclick="showLevels(currentGame)" class="flex items-center gap-1 mb-4 text-sm font-semibold opacity-70 hover:opacity-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Levels</button>
+    <h2 data-template-id="scramble-title" class="canva-text text-2xl text-center mb-1" style="color: rgb(61, 43, 31); font-weight: 900; font-style: normal; font-size: 24px;">Books Scramble</h2>
+    <div id="scramble-area" class="text-center">
+     <p id="s-level-label" class="text-xs font-semibold uppercase tracking-wide opacity-60 mb-1"></p>
+     <p id="s-progress" class="font-semibold text-sm opacity-70 mb-3"></p>
+     <div class="bg-white/60 rounded-xl p-6 shadow-sm">
+      <p data-template-id="scramble-instruction" class="canva-text text-sm mb-2" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Type the correct book name:</p>
+      <p id="scrambled-word" class="text-3xl font-bold tracking-wide mb-4" style="font-family:'Playfair Display',serif;color:#3d2b1f;"></p>
+      <form id="scramble-form" class="flex flex-col items-center gap-3"><label for="s-input" class="sr-only">Your answer</label> <input id="s-input" type="text" class="w-full max-w-xs border-2 rounded-lg py-2 px-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-amber-600" style="background:#faf3eb;color:#3d2b1f;border-color:#d4a574;" autocomplete="off" placeholder="Type your answer..."> <button data-template-id="scramble-submit" type="submit" class="canva-button rounded-lg py-2 px-8 font-semibold" style="background: rgb(92, 61, 46); color: rgb(250, 243, 235); font-weight: 600; font-style: normal; font-size: 16px;">Submit</button>
+      </form>
+      <p id="s-feedback" class="mt-3 text-lg min-h-[1.5rem]"></p>
+     </div>
+    </div>
+    <div id="s-results" class="text-center py-8 hidden">
+     <div id="s-badge" class="text-5xl mb-3"></div>
+     <h2 class="text-2xl font-bold mb-2" style="color:#3d2b1f;">Level Complete!</h2>
+     <p id="s-score" class="text-2xl font-bold mb-2" style="color:#3d2b1f;"></p>
+     <p id="s-unlock-msg" class="text-sm mb-4 font-semibold" style="color:#2d6a4f;"></p>
+     <div class="flex gap-3 justify-center"><button onclick="showLevels('scramble')" data-template-id="scramble-restart" class="canva-button rounded-lg py-2 px-6 font-semibold" style="background: rgb(92, 61, 46); color: rgb(250, 243, 235); font-weight: 600; font-style: normal; font-size: 16px;">Back to Levels</button>
+     </div>
+    </div>
+   </section><!-- GAME 2: WIVES -->
+   <section id="game-wives" class="hidden"><button onclick="showLevels(currentGame)" class="flex items-center gap-1 mb-4 text-sm font-semibold opacity-70 hover:opacity-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Levels</button>
+    <h2 data-template-id="wives-title" class="canva-text text-2xl text-center mb-1" style="color: rgb(61, 43, 31); font-weight: 900; font-style: normal; font-size: 24px;">Wives of the Bible</h2>
+    <div id="wives-area" class="text-center">
+     <p id="w-level-label" class="text-xs font-semibold uppercase tracking-wide opacity-60 mb-1"></p>
+     <p id="w-progress" class="font-semibold text-sm opacity-70 mb-3"></p>
+     <div class="bg-white/60 rounded-xl p-6 shadow-sm">
+      <p data-template-id="wives-instruction" class="canva-text text-sm mb-2" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Who was this man's wife?</p>
+      <p id="w-character" class="text-3xl font-bold mb-4" style="font-family:'Playfair Display',serif;color:#3d2b1f;"></p>
+      <form id="wives-form" class="flex flex-col items-center gap-3"><label for="w-input" class="sr-only">Wife's name</label> <input id="w-input" type="text" class="w-full max-w-xs border-2 rounded-lg py-2 px-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-amber-600" style="background:#faf3eb;color:#3d2b1f;border-color:#d4a574;" autocomplete="off" placeholder="Type wife's name..."> <button data-template-id="wives-submit" type="submit" class="canva-button rounded-lg py-2 px-8 font-semibold" style="background: rgb(92, 61, 46); color: rgb(250, 243, 235); font-weight: 600; font-style: normal; font-size: 16px;">Submit</button>
+      </form>
+      <p id="w-feedback" class="mt-3 text-lg min-h-[1.5rem]"></p>
+     </div>
+    </div>
+    <div id="w-results" class="text-center py-8 hidden">
+     <div id="w-badge" class="text-5xl mb-3"></div>
+     <h2 class="text-2xl font-bold mb-2" style="color:#3d2b1f;">Level Complete!</h2>
+     <p id="w-score" class="text-2xl font-bold mb-2" style="color:#3d2b1f;"></p>
+     <p id="w-unlock-msg" class="text-sm mb-4 font-semibold" style="color:#2d6a4f;"></p>
+     <div class="flex gap-3 justify-center"><button onclick="showLevels('wives')" data-template-id="wives-restart" class="canva-button rounded-lg py-2 px-6 font-semibold" style="background: rgb(92, 61, 46); color: rgb(250, 243, 235); font-weight: 600; font-style: normal; font-size: 16px;">Back to Levels</button>
+     </div>
+    </div>
+   </section><!-- GAME 3: VERSES -->
+   <section id="game-verses" class="hidden"><button onclick="showLevels(currentGame)" class="flex items-center gap-1 mb-4 text-sm font-semibold opacity-70 hover:opacity-100"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Levels</button>
+    <h2 data-template-id="verses-title" class="canva-text text-2xl text-center mb-1" style="color: rgb(61, 43, 31); font-weight: 900; font-style: normal; font-size: 24px;">Memory Verse Fill-in</h2>
+    <div id="verses-area" class="text-center">
+     <p id="v-level-label" class="text-xs font-semibold uppercase tracking-wide opacity-60 mb-1"></p>
+     <p id="v-progress" class="font-semibold text-sm opacity-70 mb-3"></p>
+     <div class="bg-white/60 rounded-xl p-6 shadow-sm">
+      <p data-template-id="verses-instruction" class="canva-text text-sm mb-2" style="color: rgb(92, 61, 46); font-weight: 400; font-style: normal; font-size: 16px;">Fill in the missing word:</p>
+      <p id="v-reference" class="text-sm font-semibold mb-2 opacity-70"></p>
+      <p id="v-verse" class="text-lg mb-4 leading-relaxed" style="color:#3d2b1f;"></p>
+      <form id="verses-form" class="flex flex-col items-center gap-3"><label for="v-input" class="sr-only">Missing word</label> <input id="v-input" type="text" class="w-full max-w-xs border-2 rounded-lg py-2 px-4 text-center text-lg focus:outline-none focus:ring-2 focus:ring-amber-600" style="background:#faf3eb;color:#3d2b1f;border-color:#d4a574;" autocomplete="off" placeholder="Fill in the blank..."> <button data-template-id="verses-submit" type="submit" class="canva-button rounded-lg py-2 px-8 font-semibold" style="background: rgb(92, 61, 46); color: rgb(250, 243, 235); font-weight: 600; font-style: normal; font-size: 16px;">Submit</button>
+      </form>
+      <p id="v-feedback" class="mt-3 text-lg min-h-[1.5rem]"></p>
+     </div>
+    </div>
+    <div id="v-results" class="text-center py-8 hidden">
+     <div id="v-badge" class="text-5xl mb-3"></div>
+     <h2 class="text-2xl font-bold mb-2" style="color:#3d2b1f;">Level Complete!</h2>
+     <p id="v-score" class="text-2xl font-bold mb-2" style="color:#3d2b1f;"></p>
+     <p id="v-unlock-msg" class="text-sm mb-4 font-semibold" style="color:#2d6a4f;"></p>
+     <div class="flex gap-3 justify-center"><button onclick="showLevels('verses')" data-template-id="verses-restart" class="canva-button rounded-lg py-2 px-6 font-semibold" style="background: rgb(92, 61, 46); color: rgb(250, 243, 235); font-weight: 600; font-style: normal; font-size: 16px;">Back to Levels</button>
+     </div>
+    </div>
+   </section>
+  </div>
+  <script>
+    const LEVELS = [
+      { name: 'Beginner', icon: '🌱', questions: { scramble: 4, wives: 4, verses: 4 } },
+      { name: 'Easy', icon: '🌿', questions: { scramble: 8, wives: 6, verses: 6 } },
+      { name: 'Medium', icon: '🌳', questions: { scramble: 12, wives: 8, verses: 8 } },
+      { name: 'Hard', icon: '🔥', questions: { scramble: 16, wives: 10, verses: 10 } },
+      { name: 'Scholar', icon: '👑', questions: { scramble: 20, wives: 12, verses: 12 } }
+    ];
+
+    function getProgress() {
+      try { return JSON.parse(localStorage.getItem('bible-quiz-progress')) || {}; } catch(e) { return {}; }
+    }
+    function saveProgress(game, level) {
+      const p = getProgress();
+      if (!p[game]) p[game] = [];
+      if (!p[game].includes(level)) p[game].push(level);
+      localStorage.setItem('bible-quiz-progress', JSON.stringify(p));
+    }
+    function getCompletedLevels(game) { return (getProgress()[game] || []); }
+    function isLevelUnlocked(game, lvl) { return lvl === 0 || getCompletedLevels(game).includes(lvl - 1); }
+
+    function renderHomeStars() {
+      ['scramble','wives','verses'].forEach(game => {
+        const el = document.getElementById('stars-' + game);
+        const completed = getCompletedLevels(game);
+        el.innerHTML = LEVELS.map((l, i) =>
+          `<span style="font-size:16px;">${completed.includes(i) ? '⭐' : '○'}</span>`
+        ).join('');
+      });
+    }
+
+    let currentGame = '', currentLevel = 0;
+
+    function hideAll() {
+      ['home-screen','level-select','game-scramble','game-wives','game-verses'].forEach(id =>
+        document.getElementById(id).classList.add('hidden')
+      );
+    }
+    function goHome() { hideAll(); document.getElementById('home-screen').classList.remove('hidden'); renderHomeStars(); }
+
+    function showLevels(game) {
+      currentGame = game;
+      hideAll();
+      document.getElementById('level-select').classList.remove('hidden');
+      const titles = { scramble: 'Books Scramble', wives: 'Wives of the Bible', verses: 'Memory Verse Fill-in' };
+      document.getElementById('level-select-title').textContent = titles[game];
+      const container = document.getElementById('level-buttons');
+      const completed = getCompletedLevels(game);
+      container.innerHTML = LEVELS.map((l, i) => {
+        const unlocked = isLevelUnlocked(game, i);
+        const done = completed.includes(i);
+        const status = done ? '⭐' : (unlocked ? '○' : '🔒');
+        const qCount = l.questions[game];
+        return `<button class="level-btn w-full rounded-xl p-4 flex items-center gap-4 text-left ${unlocked ? '' : 'opacity-50'}" 
+          style="background:${done ? '#f0e6d2' : '#ffffff'};border:2px solid ${done ? '#d4a574' : '#e5d5c0'};" 
+          ${unlocked ? `onclick="startLevel('${game}',${i})"` : 'disabled'}>
+          <span class="text-2xl">${l.icon}</span>
+          <div class="flex-1">
+            <p class="font-bold" style="color:#3d2b1f;">${l.name}</p>
+            <p class="text-xs opacity-70">${qCount} questions</p>
+          </div>
+          <span class="text-xl">${status}</span>
+        </button>`;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function startLevel(game, level) {
+      currentGame = game;
+      currentLevel = level;
+      hideAll();
+      document.getElementById('game-' + game).classList.remove('hidden');
+      if (game === 'scramble') initScramble();
+      else if (game === 'wives') initWives();
+      else initVerses();
+      lucide.createIcons();
+    }
+
+    function createConfetti() {
+      const emojis = ['🎉','🎊','✨','⭐','🌟'];
+      for (let i = 0; i < 8; i++) {
+        const c = document.createElement('div');
+        c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        c.style.cssText = `position:fixed;left:${Math.random()*100}%;top:50%;font-size:${28+Math.random()*16}px;z-index:9999;pointer-events:none;`;
+        c.style.setProperty('--dx', (Math.random()-0.5)*200+'px');
+        c.style.setProperty('--dy', (-150-Math.random()*100)+'px');
+        c.style.animation = 'burst 0.9s ease-out forwards';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 1000);
+      }
+    }
+
+    function showResults(game, score, total) {
+      const passed = score / total >= 0.6;
+      if (passed) { saveProgress(game, currentLevel); createConfetti(); }
+      const prefix = game === 'scramble' ? 's' : game === 'wives' ? 'w' : 'v';
+      document.getElementById(prefix + '-badge').textContent = passed ? LEVELS[currentLevel].icon : '😔';
+      document.getElementById(prefix + '-score').textContent = score + ' / ' + total;
+      document.getElementById(prefix + '-unlock-msg').textContent = passed
+        ? (currentLevel < 4 ? '🔓 Next level unlocked!' : '🏆 All levels complete!')
+        : 'Score 60%+ to unlock next level';
+    }
+
+    const allBooks = ["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","Samuel","Kings","Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum"];
+    let sIdx=0, sScore=0, sShuffled=[], sTotal=0;
+    function scramble(w){let a=w.split('');for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}const r=a.join('');return r.toLowerCase()===w.toLowerCase()?scramble(w):r.toUpperCase();}
+    function initScramble(){
+      sTotal = LEVELS[currentLevel].questions.scramble;
+      const sorted = [...allBooks].sort((a,b) => a.length - b.length);
+      const pool = currentLevel <= 1 ? sorted.slice(0,15) : currentLevel <= 3 ? sorted.slice(5,25) : sorted.slice(10);
+      sShuffled = pool.sort(()=>Math.random()-0.5).slice(0, sTotal);
+      sIdx=0;sScore=0;
+      document.getElementById('s-results').classList.add('hidden');
+      document.getElementById('scramble-area').classList.remove('hidden');
+      document.getElementById('s-level-label').textContent = LEVELS[currentLevel].icon + ' ' + LEVELS[currentLevel].name;
+      showScrambleQ();
+    }
+    function showScrambleQ(){document.getElementById('s-progress').textContent=`${sIdx+1} / ${sTotal}`;document.getElementById('scrambled-word').textContent=scramble(sShuffled[sIdx]);document.getElementById('s-feedback').textContent='';document.getElementById('s-input').value='';document.getElementById('s-input').disabled=false;document.getElementById('s-input').focus();}
+    document.getElementById('scramble-form').addEventListener('submit',function(e){e.preventDefault();const inp=document.getElementById('s-input'),ans=inp.value.trim();if(!ans)return;inp.disabled=true;const fb=document.getElementById('s-feedback');if(ans.toLowerCase()===sShuffled[sIdx].toLowerCase()){sScore++;fb.textContent='✓ Correct!';fb.className='mt-3 text-lg feedback-correct';createConfetti();}else{fb.textContent='✗ Answer: '+sShuffled[sIdx];fb.className='mt-3 text-lg feedback-wrong';}setTimeout(()=>{sIdx++;if(sIdx<sTotal)showScrambleQ();else{document.getElementById('scramble-area').classList.add('hidden');document.getElementById('s-results').classList.remove('hidden');showResults('scramble',sScore,sTotal);}},1400);});
+
+    const wivesData = [
+      {husband:"Adam",wife:"Eve"},{husband:"Abraham",wife:"Sarah"},{husband:"Isaac",wife:"Rebekah"},
+      {husband:"Jacob",wife:"Rachel"},{husband:"Boaz",wife:"Ruth"},{husband:"David",wife:"Bathsheba"},
+      {husband:"Ahab",wife:"Jezebel"},{husband:"Moses",wife:"Zipporah"},{husband:"Hosea",wife:"Gomer"},
+      {husband:"Aquila",wife:"Priscilla"},{husband:"Elkanah",wife:"Hannah"},{husband:"Nabal",wife:"Abigail"},
+      {husband:"Salmon",wife:"Rahab"},{husband:"Joseph",wife:"Mary"},{husband:"Lapidoth",wife:"Deborah"}
+    ];
+    let wIdx=0, wScore=0, wShuffled=[], wTotal=0;
+    function initWives(){
+      wTotal = LEVELS[currentLevel].questions.wives;
+      const pool = currentLevel <= 1 ? wivesData.slice(0,8) : currentLevel <= 3 ? wivesData.slice(0,12) : wivesData;
+      wShuffled=[...pool].sort(()=>Math.random()-0.5).slice(0,wTotal);
+      wIdx=0;wScore=0;
+      document.getElementById('w-results').classList.add('hidden');
+      document.getElementById('wives-area').classList.remove('hidden');
+      document.getElementById('w-level-label').textContent = LEVELS[currentLevel].icon + ' ' + LEVELS[currentLevel].name;
+      showWivesQ();
+    }
+    function showWivesQ(){document.getElementById('w-progress').textContent=`${wIdx+1} / ${wTotal}`;document.getElementById('w-character').textContent=wShuffled[wIdx].husband;document.getElementById('w-feedback').textContent='';document.getElementById('w-input').value='';document.getElementById('w-input').disabled=false;document.getElementById('w-input').focus();}
+    document.getElementById('wives-form').addEventListener('submit',function(e){e.preventDefault();const inp=document.getElementById('w-input'),ans=inp.value.trim();if(!ans)return;inp.disabled=true;const fb=document.getElementById('w-feedback');if(ans.toLowerCase()===wShuffled[wIdx].wife.toLowerCase()){wScore++;fb.textContent='✓ Correct!';fb.className='mt-3 text-lg feedback-correct';createConfetti();}else{fb.textContent='✗ Answer: '+wShuffled[wIdx].wife;fb.className='mt-3 text-lg feedback-wrong';}setTimeout(()=>{wIdx++;if(wIdx<wTotal)showWivesQ();else{document.getElementById('wives-area').classList.add('hidden');document.getElementById('w-results').classList.remove('hidden');showResults('wives',wScore,wTotal);}},1400);});
+
+    const versesData = [
+      {ref:"John 3:16",blank:"world",display:"For God so loved the _____ that he gave his only begotten Son",difficulty:1},
+      {ref:"Psalm 23:1",blank:"shepherd",display:"The Lord is my _____ I shall not want",difficulty:1},
+      {ref:"Proverbs 3:5",blank:"heart",display:"Trust in the Lord with all your _____",difficulty:1},
+      {ref:"Philippians 4:13",blank:"Christ",display:"I can do all things through _____ who strengthens me",difficulty:1},
+      {ref:"Romans 8:28",blank:"good",display:"All things work together for _____",difficulty:2},
+      {ref:"Isaiah 40:31",blank:"strength",display:"They that wait upon the Lord shall renew their _____",difficulty:2},
+      {ref:"Jeremiah 29:11",blank:"plans",display:"For I know the _____ I have for you",difficulty:2},
+      {ref:"Matthew 28:19",blank:"disciples",display:"Go therefore and make _____ of all nations",difficulty:2},
+      {ref:"Hebrews 11:1",blank:"faith",display:"_____ is the substance of things hoped for",difficulty:3},
+      {ref:"Romans 12:2",blank:"mind",display:"Be not conformed to this world but be transformed by the renewing of your _____",difficulty:3},
+      {ref:"Psalm 119:105",blank:"lamp",display:"Thy word is a _____ unto my feet",difficulty:3},
+      {ref:"Galatians 5:22",blank:"Spirit",display:"The fruit of the _____ is love joy peace",difficulty:3},
+      {ref:"Ephesians 2:8",blank:"grace",display:"For by _____ are ye saved through faith",difficulty:4},
+      {ref:"2 Timothy 1:7",blank:"power",display:"God hath not given us the spirit of fear but of _____",difficulty:4},
+      {ref:"1 Corinthians 13:13",blank:"love",display:"And now abideth faith hope and _____ but the greatest of these is _____",difficulty:5}
+    ];
+    let vIdx=0, vScore=0, vShuffled=[], vTotal=0;
+    function initVerses(){
+      vTotal = LEVELS[currentLevel].questions.verses;
+      const maxDiff = currentLevel + 1;
+      const pool = versesData.filter(v => v.difficulty <= maxDiff);
+      vShuffled=[...pool].sort(()=>Math.random()-0.5).slice(0,vTotal);
+      vIdx=0;vScore=0;
+      document.getElementById('v-results').classList.add('hidden');
+      document.getElementById('verses-area').classList.remove('hidden');
+      document.getElementById('v-level-label').textContent = LEVELS[currentLevel].icon + ' ' + LEVELS[currentLevel].name;
+      showVersesQ();
+    }
+    function showVersesQ(){document.getElementById('v-progress').textContent=`${vIdx+1} / ${vTotal}`;document.getElementById('v-reference').textContent=vShuffled[vIdx].ref;document.getElementById('v-verse').textContent=vShuffled[vIdx].display;document.getElementById('v-feedback').textContent='';document.getElementById('v-input').value='';document.getElementById('v-input').disabled=false;document.getElementById('v-input').focus();}
+    document.getElementById('verses-form').addEventListener('submit',function(e){e.preventDefault();const inp=document.getElementById('v-input'),ans=inp.value.trim();if(!ans)return;inp.disabled=true;const fb=document.getElementById('v-feedback');if(ans.toLowerCase()===vShuffled[vIdx].blank.toLowerCase()){vScore++;fb.textContent='✓ Correct!';fb.className='mt-3 text-lg feedback-correct';createConfetti();}else{fb.textContent='✗ Answer: '+vShuffled[vIdx].blank;fb.className='mt-3 text-lg feedback-wrong';}setTimeout(()=>{vIdx++;if(vIdx<vTotal)showVersesQ();else{document.getElementById('verses-area').classList.add('hidden');document.getElementById('v-results').classList.remove('hidden');showResults('verses',vScore,vTotal);}},1400);});
+
+    renderHomeStars();
+    lucide.createIcons();
+  </script>
+</body></html>

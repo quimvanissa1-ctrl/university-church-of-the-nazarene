@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Medical Outreach in Ongata Rongai",
+    "date": "2026-05-15",
+    "location": "Local Health Clinics",
+    "description": "Our team partnered with local clinics to provide free health screenings, medicines, and spiritual care for hundreds of families.",
+    "type": "mission",
+    "image": "images/missions/medical-outreach.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Discipleship Training in East Africa",
+    "date": "2026-03-10",
+    "location": "Regional Church Partners",
+    "description": "Leaders from multiple churches gathered for a week of training that equipped them to lead small groups and outreach teams.",
+    "type": "mission",
+    "image": "images/missions/discipleship-training.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Child Sponsorship Blessings",
+    "date": "2026-01-22",
+    "location": "Community Schools",
+    "description": "Through sponsorship, children received school supplies, mentorship, and encouragement to pursue education and faith.",
+    "type": "mission",
+    "image": "images/missions/child-sponsorship.jpg"
+  },
+  {
+    "id": 4,
+    "title": "Hiking Event",
+    "date": "2026-07-15",
+    "location": "Ngong Hills",
+    "description": "Join us for a refreshing outdoor hike where faith, fellowship, and nature come together.",
+    "type": "youth",
+    "image": null
+  },
+  {
+    "id": 5,
+    "title": "Sunday Bible Study",
+    "date": "2026-06-08",
+    "location": "University Church of the Nazarene",
+    "description": "Join a study group focused on Scripture, prayer, and practical discipleship.",
+    "type": "worship",
+    "image": null
+  },
+  {
+    "id": 6,
+    "title": "Main Sunday Service",
+    "date": "2026-06-08",
+    "location": "University Church of the Nazarene",
+    "description": "Gather for worship, teaching, and community connection in our main Sunday celebration.",
+    "type": "worship",
+    "image": null
+  },
+  {
+    "id": 7,
+    "title": "Community Feed in Kajiado",
+    "date": "2026-08-12",
+    "location": "Ongata Rongai Community Center",
+    "description": "Serving meals and sharing Christ's love with families in need across the community.",
+    "type": "mission",
+    "image": "images/missions/community-feed.jpg"
+  },
+  {
+    "id": 8,
+    "title": "School Supply Drive",
+    "date": "2026-07-30",
+    "location": "Local Schools",
+    "description": "Collecting and distributing school supplies to children preparing for the new academic year.",
+    "type": "mission",
+    "image": "images/missions/school-supply.jpg"
+  }
+]

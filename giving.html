@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Giving page for University Church of the Nazarene. Give through M-Pesa STK Push, card, or other church giving methods." />
+    <meta name="keywords" content="giving, donate, church giving, M-Pesa, DPO Pay, tithe, offering" />
+    <title>Giving | University Church of the Nazarene</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/giving.css" />
+    <script defer src="js/navbar.js"></script>
+    <script defer src="js/main.js"></script>
+</head>
+<body>
+    <div id="site-header"></div>
+    <main>
+        <section class="hero giving-hero">
+            <div class="container">
+                <h1>Give With a Grateful Heart</h1>
+                <p>Partner with University Church of the Nazarene to bless families, support ministry, and advance the gospel through faithful giving.</p>
+                <a class="btn btn-primary" href="#donation-form">Give Now</a>
+            </div>
+        </section>
+
+        <section class="giving-section">
+            <div class="container">
+                <div class="giving-grid">
+                    <article class="giving-card">
+                        <h2>Ways to Give</h2>
+                        <form id="donation-form" aria-describedby="giving-form-details">
+                            <div class="form-group">
+                                <label for="cause">Giving Cause</label>
+                                <select id="cause" name="cause" required>
+                                    <option value="">Select a cause</option>
+                                    <option value="Tithe & Offering">Tithe & Offering</option>
+                                    <option value="Sponsor a Child">Sponsor a Child</option>
+                                    <option value="Missions">Missions</option>
+                                    <option value="Development Project">Development Project</option>
+                                    <option value="Feed a Family">Feed a Family</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="amount-group">
+                                <label for="amount">Amount (Ksh.)</label>
+                                <input id="amount" name="amount" type="text" placeholder="Enter amount" inputmode="decimal" required />
+                                <p class="giving-error" id="amount-error" aria-live="polite"></p>
+                            </div>
+                            <div id="mpesa-fields" class="payment-section">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input id="phone" name="phone" type="tel" placeholder="2547XXXXXXXX" inputmode="numeric" autocomplete="tel" />
+                                    <p class="giving-error" id="phone-error" aria-live="polite"></p>
+                                </div>
+                            </div>
+                            <fieldset class="form-group">
+                                <legend>Payment Method</legend>
+                                <div class="radio-group">
+                                    <label class="radio-card">
+                                        <input type="radio" name="paymentMethod" value="mpesa" checked />
+                                        <span class="radio-label"><strong>M-Pesa</strong><span>STK Push to your phone</span></span>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="paymentMethod" value="card" />
+                                        <span class="radio-label"><strong>Card (DPO Pay)</strong><span>Secure online card payment</span></span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                            <div id="card-fields" class="payment-section hidden">
+                                <div class="form-group">
+                                    <label for="card-number">Card Number</label>
+                                    <input id="card-number" name="cardNumber" type="text" maxlength="16" placeholder="1234567812345678" inputmode="numeric" autocomplete="cc-number" />
+                                    <p class="giving-error" id="card-number-error" aria-live="polite"></p>
+                                </div>
+                                <div class="form-group card-row">
+                                    <div>
+                                        <label for="expiry">Expiry Date (MM/YY)</label>
+                                        <input id="expiry" name="expiry" type="text" maxlength="5" placeholder="MM/YY" inputmode="numeric" autocomplete="cc-exp" />
+                                        <p class="giving-error" id="expiry-error" aria-live="polite"></p>
+                                    </div>
+                                    <div>
+                                        <label for="cvv">CVV</label>
+                                        <input id="cvv" name="cvv" type="text" maxlength="3" placeholder="123" inputmode="numeric" autocomplete="cc-csc" />
+                                        <p class="giving-error" id="cvv-error" aria-live="polite"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardholder">Cardholder Name</label>
+                                    <input id="cardholder" name="cardholder" type="text" placeholder="Name on card" autocomplete="cc-name" />
+                                    <p class="giving-error" id="cardholder-error" aria-live="polite"></p>
+                                </div>
+                            </div>
+                            <div class="giving-actions">
+                                <button type="submit" class="btn btn-primary">Give Now</button>
+                                <a class="btn btn-secondary" href="contact.html">Need Help?</a>
+                            </div>
+                            <div id="giving-status" class="giving-result" role="status" aria-live="polite" hidden></div>
+                        </form>
+                    </article>
+                    <aside class="giving-summary">
+                        <h3>Your gift changes lives</h3>
+                        <p id="giving-form-details">Give easily with M-Pesa STK Push or card using our secure payment options. Every gift supports discipleship, outreach, church services, and community care.</p>
+                        <div class="giving-info">
+                            <h3>Secure & Trusted</h3>
+                            <p>Our giving page is designed for fast-loading mobile performance and secure payment flows. Please complete the form and follow the prompt on your phone for M-Pesa.</p>
+                            <p class="give-note">For live support, visit us during service or contact our giving team from the contact page.</p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="more-ways">
+            <div class="container">
+                <h2 class="section-title">More Ways to Give</h2>
+                <div class="more-ways-grid">
+                    <article class="more-ways-card">
+                        <h4>Church Services</h4>
+                        <p>Tithe envelopes are available for cash or cheque gifts. We also have a PDQ machine at the usher’s desk for instant card giving.</p>
+                        <ul>
+                            <li>Use envelopes for tithe, offering, and missions.</li>
+                            <li>PDQ machine available during services.</li>
+                            <li>Ask an usher for help with giving.</li>
+                        </ul>
+                    </article>
+                    <article class="more-ways-card">
+                        <h4>M-Pesa Giving</h4>
+                        <p>Give quickly using PayBill or M-Pesa. Use the account details below to submit your gift directly from your phone.</p>
+                        <ul>
+                            <li><strong>PayBill Number:</strong> 400200</li>
+                            <li><strong>Account:</strong> 175644 #Tithe/Offering</li>
+                            <li>Example: PayBill 400200, Account: 175644#Tithe/Offering</li>
+                        </ul>
+                    </article>
+                    <article class="more-ways-card">
+                        <h4>Direct Deposit</h4>
+                        <p>Support local and international transfers using the bank details below. Use your full name as the payment reference.</p>
+                        <ul>
+                            <li><strong>Account Name:</strong> University Church of the Nazarene</li>
+                            <li><strong>Bank:</strong> Stanbic Bank, Chiromo Branch</li>
+                            <li><strong>Account Number:</strong> 01800089616866</li>
+                            <li><strong>Reference:</strong> Use your full name</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="site-footer"></div>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('donation-form');
+            const status = document.getElementById('giving-status');
+            const amountInput = document.getElementById('amount');
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phone-error');
+            const amountError = document.getElementById('amount-error');
+            const cardFields = document.getElementById('card-fields');
+            const mpesaFields = document.getElementById('mpesa-fields');
+            const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+            const cardNumberInput = document.getElementById('card-number');
+            const expiryInput = document.getElementById('expiry');
+            const cvvInput = document.getElementById('cvv');
+            const cardholderInput = document.getElementById('cardholder');
+            const cardNumberError = document.getElementById('card-number-error');
+            const expiryError = document.getElementById('expiry-error');
+            const cvvError = document.getElementById('cvv-error');
+            const cardholderError = document.getElementById('cardholder-error');
+
+            function updateStatus(message, success) {
+                status.hidden = false;
+                status.textContent = message;
+                status.style.background = success ? 'rgba(20,115,108,0.1)' : 'rgba(157,2,8,0.1)';
+                status.style.color = success ? 'var(--green)' : '#9d0208';
+                status.style.borderColor = success ? 'rgba(20,115,108,0.18)' : 'rgba(157,2,8,0.18)';
+            }
+
+            function validatePhone(value) {
+                return /^2547\d{8}$/.test(value);
+            }
+
+            function validateAmount(value) {
+                return /^\d+(?:\.\d{1,2})?$/.test(value) && Number(value) > 0;
+            }
+
+            function validateCardNumber(value) {
+                return /^\d{16}$/.test(value);
+            }
+
+            function validateExpiry(value) {
+                if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) {
+                    return false;
+                }
+                const [month, year] = value.split('/').map(Number);
+                const now = new Date();
+                const expiryDate = new Date(2000 + year, month - 1, 1);
+                expiryDate.setMonth(expiryDate.getMonth() + 1);
+                return expiryDate > now;
+            }
+
+            function validateCvv(value) {
+                return /^\d{3}$/.test(value);
+            }
+
+            function validateCardholder(value) {
+                return value.trim().length > 0;
+            }
+
+            function togglePaymentFields(method) {
+                if (method === 'card') {
+                    cardFields.classList.remove('hidden');
+                    mpesaFields.classList.add('hidden');
+                } else {
+                    cardFields.classList.add('hidden');
+                    mpesaFields.classList.remove('hidden');
+                }
+            }
+
+            paymentRadios.forEach(radio => {
+                radio.addEventListener('change', function (e) {
+                    togglePaymentFields(e.target.value);
+                });
+            });
+
+            togglePaymentFields(document.querySelector('input[name="paymentMethod"]:checked').value);
+
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                phoneError.textContent = '';
+                amountError.textContent = '';
+                cardNumberError.textContent = '';
+                expiryError.textContent = '';
+                cvvError.textContent = '';
+                cardholderError.textContent = '';
+                status.hidden = true;
+
+                const cause = form.cause.value.trim();
+                const amount = amountInput.value.trim();
+                const paymentMethod = form.paymentMethod.value;
+                let valid = true;
+
+                if (!cause) {
+                    valid = false;
+                    updateStatus('Please choose a giving cause.', false);
+                }
+                if (!validateAmount(amount)) {
+                    valid = false;
+                    amountError.textContent = 'Enter a valid amount greater than 0.';
+                }
+
+                if (paymentMethod === 'mpesa') {
+                    const phone = phoneInput.value.trim();
+                    if (!validatePhone(phone)) {
+                        valid = false;
+                        phoneError.textContent = 'Enter a valid Kenyan phone number like 2547XXXXXXXX.';
+                    }
+                }
+
+                if (paymentMethod === 'card') {
+                    const cardNumber = cardNumberInput.value.trim().replace(/\s+/g, '');
+                    const expiry = expiryInput.value.trim();
+                    const cvv = cvvInput.value.trim();
+                    const cardholder = cardholderInput.value.trim();
+
+                    if (!validateCardNumber(cardNumber)) {
+                        valid = false;
+                        cardNumberError.textContent = 'Enter a 16-digit card number.';
+                    }
+                    if (!validateExpiry(expiry)) {
+                        valid = false;
+                        expiryError.textContent = 'Enter a valid expiry date that is not in the past.';
+                    }
+                    if (!validateCvv(cvv)) {
+                        valid = false;
+                        cvvError.textContent = 'Enter a 3-digit CVV.';
+                    }
+                    if (!validateCardholder(cardholder)) {
+                        valid = false;
+                        cardholderError.textContent = 'Enter the name on your card.';
+                    }
+                }
+
+                if (!valid) {
+                    return;
+                }
+
+                if (paymentMethod === 'card') {
+                    updateStatus('Processing card payment. Please follow the secure checkout prompt.', true);
+                    try {
+                        const payload = {
+                            cause,
+                            amount: Number(amount),
+                            paymentMethod,
+                            cardNumber: cardNumberInput.value.trim(),
+                            expiry: expiryInput.value.trim(),
+                            cvv: cvvInput.value.trim(),
+                            cardholder: cardholderInput.value.trim()
+                        };
+                        const response = await fetch('/dpo-pay', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!response.ok) {
+                            throw new Error('Unable to initiate card payment.');
+                        }
+                        const result = await response.json();
+                        if (result.success) {
+                            updateStatus('Thank you for your gift! Your card payment is being processed.', true);
+                            form.reset();
+                            togglePaymentFields('mpesa');
+                        } else {
+                            throw new Error(result.message || 'Card payment could not be completed.');
+                        }
+                    } catch (error) {
+                        updateStatus(error.message || 'Card payment failed. Please try again or contact us.', false);
+                    }
+                    return;
+                }
+
+                updateStatus('Sending M-Pesa STK Push request. Please complete the prompt on your phone.', true);
+                try {
+                    const payload = {
+                        cause,
+                        phone: phoneInput.value.trim(),
+                        amount: Number(amount),
+                        paymentMethod
+                    };
+                    const response = await fetch('/stkpush', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        throw new Error('Unable to initiate payment request.');
+                    }
+                    const result = await response.json();
+                    if (result.success) {
+                        updateStatus('Thank you for your gift! Please enter your M-Pesa PIN on your phone to complete the payment.', true);
+                        form.reset();
+                        togglePaymentFields('mpesa');
+                    } else {
+                        throw new Error(result.message || 'The payment request was not completed.');
+                    }
+                } catch (error) {
+                    updateStatus(error.message || 'Payment request failed. Please try again or contact us.', false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

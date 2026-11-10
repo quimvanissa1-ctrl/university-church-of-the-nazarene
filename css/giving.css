@@ -1,0 +1,220 @@
+.giving-hero {
+    padding: 5rem 0 3rem;
+    background: linear-gradient(135deg, rgba(211,149,18,0.95), rgba(0,119,153,0.9));
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+.giving-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 35%);
+    pointer-events: none;
+}
+.giving-hero .container {
+    position: relative;
+    z-index: 1;
+}
+.giving-hero h1 {
+    max-width: 720px;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+}
+.giving-hero p {
+    max-width: 680px;
+    margin-bottom: 1.75rem;
+    font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+    line-height: 1.8;
+    color: rgba(255,255,255,0.92);
+}
+.giving-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+.giving-card, .giving-summary, .giving-info {
+    background: var(--white);
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.08);
+    padding: 2rem;
+}
+.giving-card h2, .more-ways h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--red);
+}
+.giving-card label {
+    display: block;
+    margin-bottom: 0.65rem;
+    font-weight: 700;
+    color: var(--black);
+}
+.giving-card select,
+.giving-card input {
+    width: 100%;
+    padding: 1rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(0,0,0,0.13);
+    background: #fff;
+    color: var(--dark-gray);
+    font-size: 1rem;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.giving-card select:focus,
+.giving-card input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(0,119,153,0.12);
+    outline: none;
+}
+.form-group {
+    margin-bottom: 1.35rem;
+}
+.radio-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+.radio-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.radio-card:hover,
+.radio-card input:focus-visible + .radio-label {
+    transform: translateY(-1px);
+    border-color: var(--green);
+}
+.radio-card input {
+    margin-top: 0.2rem;
+}
+.radio-label {
+    display: block;
+}
+.radio-label strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--black);
+}
+.radio-label span {
+    font-size: 0.95rem;
+    color: var(--medium-gray);
+}
+.payment-section {
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.35s ease, transform 0.3s ease;
+}
+.payment-section.hidden {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+.payment-section:not(.hidden) {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+}
+.card-row {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.give-note {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+    line-height: 1.7;
+}
+.giving-summary h3,
+.giving-info h3 {
+    margin-bottom: 1rem;
+    color: var(--blue);
+}
+.giving-summary p,
+.giving-info p,
+.more-ways-card p {
+    margin: 0 0 1rem;
+    color: var(--medium-gray);
+    line-height: 1.8;
+}
+.giving-summary ul,
+.more-ways-card ul {
+    padding-left: 1.25rem;
+    color: var(--dark-gray);
+    line-height: 1.9;
+}
+.giving-summary li,
+.more-ways-card li {
+    margin-bottom: 0.8rem;
+}
+.giving-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.giving-result {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    background: rgba(20,115,108,0.08);
+    color: var(--green);
+    border: 1px solid rgba(20,115,108,0.18);
+}
+.giving-error {
+    color: #9d0208;
+    font-weight: 700;
+    margin-top: 0.6rem;
+}
+.more-ways {
+    padding: 3rem 0 4rem;
+}
+.more-ways-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.more-ways-card {
+    padding: 1.75rem;
+    border-radius: 1.25rem;
+    background: rgba(245,245,245,0.96);
+    border: 1px solid rgba(0,0,0,0.06);
+}
+.more-ways-card h4 {
+    margin-bottom: 0.9rem;
+    color: var(--red);
+}
+.more-ways-card strong {
+    color: var(--black);
+}
+@media (max-width: 900px) {
+    .giving-grid {
+        grid-template-columns: 1fr;
+    }
+    .radio-group {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 650px) {
+    .giving-hero {
+        padding: 4rem 0 2rem;
+    }
+    .giving-hero h1 {
+        font-size: 2.6rem;
+    }
+    .giving-hero p {
+        font-size: 1rem;
+    }
+    .card-row {
+        grid-template-columns: 1fr;
+    }
+}

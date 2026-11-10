@@ -1,0 +1,200 @@
+.mission-intro,
+.mission-focus,
+.mission-highlights,
+.missionaries,
+.mission-cta {
+    padding: 3rem 0;
+}
+.mission-intro {
+    padding-bottom: 2.2rem;
+}
+.mission-highlights {
+    padding-top: 1.8rem;
+}
+.mission-intro .intro-grid,
+.mission-focus .focus-grid,
+.mission-highlights .grid,
+.missionary-grid {
+    display: grid;
+    gap: 1.75rem;
+}
+.mission-intro .intro-grid,
+.mission-focus .focus-grid {
+    grid-template-columns: 1fr;
+}
+.mission-focus .focus-grid,
+.mission-highlights .grid,
+.missionary-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.mission-card,
+.event-card,
+.missionary-card,
+.mission-cta {
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.08);
+    padding: 2rem;
+    border: 1px solid rgba(0,0,0,0.06);
+}
+.mission-card h3,
+.event-card h3,
+.missionary-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.85rem;
+}
+.mission-card p,
+.event-card p,
+.missionary-card p,
+.mission-intro p,
+.missionaries p {
+    color: var(--medium-gray);
+    line-height: 1.8;
+}
+.focus-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(211,149,18,0.14);
+    color: var(--black);
+    font-weight: 700;
+}
+.focus-pill span {
+    font-size: 1.2rem;
+}
+.mission-intro h2,
+.mission-highlights h2,
+.missionaries h2,
+.mission-cta h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.event-card img,
+.missionary-photo {
+    width: 100%;
+    border-radius: 1rem;
+    object-fit: cover;
+    margin: 1rem 0;
+    min-height: 200px;
+}
+.event-card .date-label {
+    display: inline-flex;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(0,119,153,0.12);
+    color: var(--blue);
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+}
+.event-card .event-location {
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.missionary-card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.25rem;
+    align-items: center;
+}
+.missionary-card h3 {
+    margin-bottom: 0.4rem;
+}
+.missionary-photo {
+    min-height: 140px;
+}
+.mission-cta {
+    background: linear-gradient(135deg, rgba(211,149,18,0.97), rgba(157,10,15,0.96));
+    color: #fff;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+.mission-cta h2 {
+    margin-bottom: 1rem;
+    color: #fff;
+}
+.mission-cta p {
+    max-width: 720px;
+    margin: 0 auto 1.75rem;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.8;
+}
+.mission-highlights .cta-row,
+.missionaries .section-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.load-more-button {
+    background: var(--blue);
+    color: #fff;
+    padding: 1rem 1.75rem;
+    border-radius: 999px;
+    border: none;
+}
+.load-more-button:hover,
+.load-more-button:focus-visible {
+    background: #006280;
+}
+.mission-cta .btn {
+    background: #000;
+    color: #fff;
+}
+@media (max-width: 900px) {
+    .mission-intro .intro-grid,
+    .mission-focus .focus-grid,
+    .mission-highlights .grid,
+    .missionary-grid,
+    .missionary-card {
+        grid-template-columns: 1fr;
+    }
+    .missionary-card {
+        align-items: stretch;
+    }
+}
+.missions-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.missions-cards .card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+}
+.missions-cards .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+.missions-cards .card img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    margin-bottom: 16px;
+}
+.missions-cards .card h3 {
+    margin: 0 0 0.85rem;
+}
+.missions-cards .card p {
+    margin: 0;
+    color: var(--medium-gray);
+    line-height: 1.75;
+}
+
+@media (max-width: 650px) {
+    .mission-cta {
+        padding: 2.5rem 1.25rem;
+    }
+    .missionary-card {
+        grid-template-columns: 1fr;
+    }
+}

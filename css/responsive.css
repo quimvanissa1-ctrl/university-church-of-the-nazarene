@@ -1,0 +1,175 @@
+@media (max-width: 1440px) {
+    .container {
+        width: min(1080px, calc(100% - 2rem));
+    }
+}
+
+@media (max-width: 1200px) {
+    .site-nav {
+        padding: 0.9rem 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero {
+        padding: 6.5rem 1.5rem 3.5rem;
+    }
+
+    .hero p,
+    .hero .subtitle {
+        max-width: 95%;
+    }
+
+    .section {
+        padding: 3.5rem 0;
+    }
+
+    .card {
+        padding: 1.85rem;
+    }
+
+    .footer-top {
+        gap: 1.4rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .hero {
+        padding: 6rem 1.25rem 3rem;
+    }
+
+    .hero h1 {
+        font-size: 2.7rem;
+    }
+
+    .hero p,
+    .hero .subtitle {
+        font-size: 1rem;
+    }
+
+    .section-intro {
+        font-size: 1rem;
+    }
+
+    .split-grid,
+    .grid {
+        gap: 1.25rem;
+    }
+
+    .site-nav {
+        gap: 0.6rem;
+        padding: 0.65rem 0.75rem;
+    }
+
+    .nav-toggle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-links {
+        max-height: calc(100vh - 140px);
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .site-nav {
+        gap: 0.5rem;
+    }
+
+    .nav-links {
+        padding: 1rem;
+    }
+
+    .nav-links a,
+    .dropdown-toggle {
+        padding: 0.85rem 1rem;
+    }
+
+    .section {
+        padding: 3rem 0;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .split-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .footer-top {
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .hero {
+        padding: 5.5rem 1rem 3rem;
+    }
+
+    .hero h1 {
+        font-size: 2.3rem;
+    }
+
+    .hero p,
+    .hero .subtitle {
+        font-size: 0.98rem;
+    }
+
+    .section-title {
+        font-size: clamp(1.75rem, 6vw, 2.2rem);
+    }
+
+    .button,
+    .btn {
+        width: 100%;
+    }
+
+    .footer-top {
+        display: grid;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-nav {
+        padding: 0.6rem 0.65rem;
+    }
+
+    .logo span {
+        font-size: 0.95rem;
+    }
+
+    .hero {
+        padding: 5rem 0.85rem 2.8rem;
+    }
+
+    .hero::after {
+        width: 190px;
+        height: 190px;
+        left: -28%;
+        top: 34%;
+    }
+
+    .section {
+        padding: 2.5rem 0;
+    }
+
+    .card {
+        padding: 1.25rem;
+    }
+
+    .section-intro {
+        margin-bottom: 2rem;
+    }
+}

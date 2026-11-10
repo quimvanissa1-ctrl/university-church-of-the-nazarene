@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Contact University Church of the Nazarene for prayer, questions, and ministry involvement." />
+    <meta name="keywords" content="contact church, prayer request, church email, church phone" />
+    <title>Contact | University Church of the Nazarene</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <script defer src="js/navbar.js"></script>
+    <script defer src="js/main.js"></script>
+</head>
+<body>
+    <div id="site-header"></div>
+    <main>
+        <section class="contact-page">
+            <div class="container">
+                <div class="split-grid contact-grid">
+                    <div class="card contact-summary">
+                        <h2 class="section-title">Get In Touch</h2>
+                        <div class="contact-details">
+                            <p><strong>Address</strong></p>
+                            <p>Africa Nazarene University, Tuala, Off Magadi Road, Nairobi, Kenya</p>
+                            <p><strong>Email</strong></p>
+                            <p>universitychurch2008@gmail.com</p>
+                            <p><strong>Phone</strong></p>
+                            <p>+254756829935</p>
+                        </div>
+                    </div>
+                    <form class="card contact-form" action="https://formspree.io/f/xaqkddyg" method="POST">
+                        <h2 class="section-title">Send a Message</h2>
+                        <label for="name">Your Name</label>
+                        <input id="name" name="name" type="text" required placeholder="Your Name" />
+                        <label for="email">Email Address</label>
+                        <input id="email" name="email" type="email" required placeholder="you@example.com" />
+                        <label for="subject">Subject</label>
+                        <input id="subject" name="subject" type="text" placeholder="Subject" />
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" required placeholder="Your message"></textarea>
+                        <button class="btn btn-primary" type="submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="site-footer"></div>
+</body>
+</html>
