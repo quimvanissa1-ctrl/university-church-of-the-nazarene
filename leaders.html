@@ -9,9 +9,12 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/navbar.css" />
     <link rel="stylesheet" href="css/responsive.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="js/supabase-config.js"></script>
     <script defer src="js/navbar.js"></script>
     <script defer src="js/main.js"></script>
     <script defer src="js/admin-access.js"></script>
+    <script defer src="js/leaders-page.js"></script>
 </head>
 <body>
     <div id="site-header"></div>
@@ -20,42 +23,10 @@
 
         <section>
             <div class="container">
-                <h2 class="section-title">Pastoral Team</h2>
+                <h2 class="section-title">Leadership Team</h2>
                 <p class="section-intro">Our leadership team is committed to spiritual growth, discipleship, and serving the campus community faithfully.</p>
-                <div class="grid grid-cols-280">
-                    <article class="card">
-                        <div class="badge">Lead Pastor</div>
-                        <h3>Rev. Richard Awanda</h3>
-                    </article>
-                    <article class="card">
-                        <div class="badge">Associate Minister</div>
-                        <h3>Rev. Charles Onyango</h3>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="container">
-                <h2 class="section-title">Ministries Leaders</h2>
-                <p class="section-intro">Our ministries leaders help guide worship, outreach, student life, and discipleship across every area of church life.</p>
-                <div class="grid grid-cols-280">
-                    <article class="card leader-card">
-                        <div class="leader-avatar">👤</div>
-                        <h3>Leader Name</h3>
-                        <p class="leader-role">Youth Ministry Leader</p>
-                    </article>
-                    <article class="card leader-card">
-                        <div class="leader-avatar">👤</div>
-                        <h3>Leader Name</h3>
-                        <p class="leader-role">Worship Ministry Leader</p>
-                    </article>
-                    <article class="card leader-card">
-                        <div class="leader-avatar">👤</div>
-                        <h3>Leader Name</h3>
-                        <p class="leader-role">Outreach Ministry Leader</p>
-                    </article>
-                </div>
+                <p class="leaders-page-status" id="leaders-page-status" role="status" aria-live="polite">Loading leaders…</p>
+                <div class="grid grid-cols-280" id="leaders-grid" aria-busy="true"></div>
                 <div class="info-panel">
                     <h3>Leadership Development</h3>
                     <p>We aim to develop leaders through mentorship, training, and ministry service. Every member has the opportunity to grow and serve.</p>

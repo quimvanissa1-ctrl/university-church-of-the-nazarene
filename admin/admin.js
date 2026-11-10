@@ -7,6 +7,30 @@
         return Boolean(metadata && (metadata.role === 'admin' || (Array.isArray(metadata.roles) && metadata.roles.includes('admin'))));
     }
 
+    function hasLeadersManagementPermission(user) {
+        const metadata = user && user.app_metadata;
+        if (!metadata) {
+            return false;
+        }
+
+        if (metadata.role === 'leaders_manager' || (Array.isArray(metadata.roles) && metadata.roles.includes('leaders_manager'))) {
+            return true;
+        }
+
+        const permissions = metadata.permissions;
+        if (Array.isArray(permissions)) {
+            return permissions.includes('leaders_management');
+        }
+        if (permissions && typeof permissions === 'object') {
+            return permissions.leaders_management === true;
+        }
+        return isAdministrator(user);
+    }
+
+    function canAccessDashboard(user) {
+        return isAdministrator(user) || hasLeadersManagementPermission(user);
+    }
+
     function showMessage(element, message, isError) {
         if (!element) {
             return;
@@ -97,7 +121,7 @@
                 return;
             }
 
-            if (!isAdministrator(result.data.user)) {
+            if (!canAccessDashboard(result.data.user)) {
                 let error;
                 try {
                     ({ error } = await client.auth.signOut());
@@ -105,10 +129,10 @@
                     error = signOutError;
                 }
                 if (error) {
-                    showMessage(loginMessage, 'This account does not have administrator access, and its session could not be cleared. Please close this page and contact an administrator.', true);
+                    showMessage(loginMessage, 'This account does not have admin or Leaders Management access, and its session could not be cleared. Please close this page and contact an administrator.', true);
                     return;
                 }
-                showMessage(loginMessage, 'This account does not have administrator access.', true);
+                showMessage(loginMessage, 'This account does not have admin or Leaders Management access.', true);
                 return;
             }
 
@@ -215,17 +239,17 @@
             }
 
             const userResult = await client.auth.getUser();
-            if (userResult.data.user && isAdministrator(userResult.data.user)) {
+            if (userResult.data.user && canAccessDashboard(userResult.data.user)) {
                 window.location.replace('dashboard.html');
             } else if (userResult.data.user) {
-                showMessage(loginMessage, 'This account does not have administrator access.', true);
+                showMessage(loginMessage, 'This account does not have admin or Leaders Management access.', true);
             }
         }).catch(function () {
             showMessage(loginMessage, 'Could not verify your existing session. Please try signing in again.', true);
         });
 
         if (new URLSearchParams(window.location.search).has('unauthorized')) {
-            showMessage(loginMessage, 'Administrator access is required to open the dashboard.', true);
+            showMessage(loginMessage, 'Admin or Leaders Management access is required to open the dashboard.', true);
         } else if (new URLSearchParams(window.location.search).has('session')) {
             showMessage(loginMessage, 'Your session could not be verified. Please sign in again.', true);
         }
@@ -251,7 +275,7 @@
             return;
         }
 
-        if (!isAdministrator(data.user)) {
+        if (!canAccessDashboard(data.user)) {
             try {
                 await client.auth.signOut();
             } catch (signOutError) {
@@ -262,6 +286,14 @@
         }
 
         document.getElementById('admin-email').textContent = data.user.email || 'Administrator';
+        const canManageLeaders = hasLeadersManagementPermission(data.user);
+        const leadersNavigationItem = document.querySelector('[data-section="Leaders Management"]');
+        if (leadersNavigationItem) {
+            leadersNavigationItem.classList.toggle('is-locked', !canManageLeaders);
+            leadersNavigationItem.setAttribute('aria-label', canManageLeaders
+                ? 'Leaders Management'
+                : 'Leaders Management, locked: permission required');
+        }
 
         client.auth.onAuthStateChange(function (event) {
             if (event === 'SIGNED_OUT') {
@@ -316,9 +348,14 @@
                 const section = item.dataset.section;
                 const isEventsSection = section === 'Events';
                 const isHomepageSection = section === 'Homepage';
-                document.getElementById('placeholder-card').hidden = isEventsSection || isHomepageSection;
+                const isLeadersSection = section === 'Leaders Management';
+                const showLeadersManagement = isLeadersSection && canManageLeaders;
+                document.getElementById('placeholder-card').hidden =
+                    isEventsSection || isHomepageSection || showLeadersManagement || (isLeadersSection && !canManageLeaders);
                 document.getElementById('events-management').hidden = !isEventsSection;
                 document.getElementById('homepage-management').hidden = !isHomepageSection;
+                document.getElementById('leaders-management').hidden = !showLeadersManagement;
+                document.getElementById('leaders-management-locked').hidden = !isLeadersSection || canManageLeaders;
                 document.getElementById('section-title').textContent = section;
                 document.getElementById('placeholder-title').textContent = section === 'Dashboard' ? 'Your website workspace' : section;
                 document.getElementById('placeholder-copy').textContent = section === 'Dashboard'
@@ -329,6 +366,9 @@
                 }
                 if (isHomepageSection && typeof window.initializeHomepageManagement === 'function') {
                     window.initializeHomepageManagement();
+                }
+                if (showLeadersManagement && typeof window.initializeLeadersManagement === 'function') {
+                    window.initializeLeadersManagement();
                 }
                 closeSidebar();
             });

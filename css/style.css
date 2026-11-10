@@ -782,11 +782,18 @@ section {
     height: 4.5rem;
     display: grid;
     place-items: center;
+    overflow: hidden;
     background: rgba(0, 119, 153, 0.1);
     color: var(--blue);
     border-radius: 50%;
     font-size: 1.6rem;
     margin: 0 auto 1.25rem;
+}
+
+.leader-card .leader-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .leader-card h3 {
@@ -797,6 +804,39 @@ section {
     color: var(--green);
     font-weight: 700;
     margin: 0;
+}
+
+.leader-card .leader-department {
+    margin: 0.55rem 0 0;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+
+.leader-card .leader-biography {
+    margin-top: 1rem;
+    line-height: 1.65;
+    white-space: pre-line;
+}
+
+.leader-card .leader-contact,
+.leader-card .leader-social-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-top: 0.8rem;
+}
+
+.leader-card .leader-contact a,
+.leader-card .leader-social-links a {
+    color: var(--blue);
+    overflow-wrap: anywhere;
+}
+
+.leaders-page-status {
+    margin: 0 0 1.5rem;
+    color: var(--medium-gray);
+    text-align: center;
 }
 
 .event-card .event-icon {

@@ -11,6 +11,7 @@
     <script defer src="admin.js"></script>
     <script defer src="events-management.js"></script>
     <script defer src="homepage-management.js"></script>
+    <script defer src="leaders-management.js"></script>
 </head>
 <body data-admin-page="dashboard">
     <div class="dashboard-shell">
@@ -24,6 +25,7 @@
             <nav class="admin-nav" aria-label="Dashboard sections">
                 <button class="nav-item is-active" type="button" data-section="Dashboard">Dashboard</button>
                 <button class="nav-item" type="button" data-section="Homepage">HOME PAGE</button>
+                <button class="nav-item" type="button" data-section="Leaders Management">Leaders Management</button>
                 <button class="nav-item" type="button" data-section="Events">Events</button>
                 <button class="nav-item" type="button" data-section="Announcements">Announcements</button>
                 <button class="nav-item" type="button" data-section="Ministries">Ministries</button>
@@ -101,6 +103,42 @@
                     <p class="events-list-status" id="events-list-status" role="status" aria-live="polite">Loading events…</p>
                     <div class="events-list" id="events-list" aria-busy="true"></div>
                 </section>
+                <section id="leaders-management" aria-labelledby="leaders-management-title" hidden>
+                    <div class="leaders-heading">
+                        <div>
+                            <h2 id="leaders-management-title">Manage leaders</h2>
+                            <p>Create, publish, and order the profiles displayed on the public Leaders page.</p>
+                        </div>
+                        <button class="primary-button leaders-add-button" id="add-leader-button" type="button">Add leader</button>
+                    </div>
+                    <p class="leaders-feedback" id="leaders-feedback" role="status" aria-live="polite" hidden></p>
+                    <div class="events-toolbar leaders-toolbar">
+                        <label>
+                            <span>Search leaders</span>
+                            <input id="leader-search" type="search" placeholder="Search name, position, or department" />
+                        </label>
+                        <label>
+                            <span>Publication</span>
+                            <select id="leader-publication-filter">
+                                <option value="all">All leaders</option>
+                                <option value="published">Published</option>
+                                <option value="unpublished">Unpublished</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Department</span>
+                            <select id="leader-department-filter">
+                                <option value="all">All departments</option>
+                            </select>
+                        </label>
+                    </div>
+                    <p class="leaders-list-status" id="leaders-list-status" role="status" aria-live="polite">Loading leaders…</p>
+                    <div class="leaders-list" id="leaders-list" aria-busy="true"></div>
+                </section>
+                <section class="leaders-locked-card" id="leaders-management-locked" hidden>
+                    <h2>Leaders Management is locked</h2>
+                    <p>Your account does not have the Leaders Management permission. Ask a project administrator to grant access.</p>
+                </section>
             </main>
         </div>
     </div>
@@ -170,6 +208,80 @@
                 </button>
             </footer>
         </form>
+    </dialog>
+    <dialog class="event-dialog leader-dialog" id="leader-dialog" aria-labelledby="leader-dialog-title">
+        <form class="event-form" id="leader-form" novalidate>
+            <header class="event-dialog-header">
+                <h2 id="leader-dialog-title">Add leader</h2>
+                <button class="event-icon-button" id="close-leader-dialog" type="button" aria-label="Close leader form">×</button>
+            </header>
+            <p class="leaders-form-message" id="leader-form-message" role="alert" hidden></p>
+            <div class="event-form-fields">
+                <label class="event-field">
+                    <span>Full name <span aria-hidden="true">*</span></span>
+                    <input name="name" type="text" maxlength="160" required />
+                </label>
+                <label class="event-field">
+                    <span>Leadership title or position <span aria-hidden="true">*</span></span>
+                    <input name="position" type="text" maxlength="160" required />
+                </label>
+                <label class="event-field event-field-wide">
+                    <span>Biography or description</span>
+                    <textarea name="biography" rows="4" maxlength="5000"></textarea>
+                </label>
+                <label class="event-field">
+                    <span>Ministry or department</span>
+                    <input name="department" type="text" maxlength="160" />
+                </label>
+                <label class="event-field">
+                    <span>Display order</span>
+                    <input name="display_order" type="number" min="0" max="2147483647" step="1" required />
+                </label>
+                <label class="event-field">
+                    <span>Email address</span>
+                    <input name="email" type="email" maxlength="254" />
+                </label>
+                <label class="event-field">
+                    <span>Phone number</span>
+                    <input name="phone" type="tel" maxlength="40" />
+                </label>
+                <label class="event-field event-field-wide">
+                    <span>Social media links</span>
+                    <textarea name="social_links" rows="3" placeholder="Facebook | https://…&#10;Instagram | https://…"></textarea>
+                    <small>Enter one HTTPS link per line. Optionally add a label followed by | before each URL.</small>
+                </label>
+                <div class="event-field event-field-wide">
+                    <label class="event-upload-label" for="leader-photo">Profile photograph</label>
+                    <input id="leader-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+                    <small>Optional JPG, PNG, WebP, or GIF image, up to 5 MB.</small>
+                    <div class="event-poster-preview" id="leader-photo-preview" hidden>
+                        <div class="event-poster-preview-image leader-photo-preview-image" id="leader-photo-preview-image" role="img" aria-label="Leader photograph preview"></div>
+                        <label class="event-remove-poster" id="remove-leader-photo-control" hidden>
+                            <input name="remove_photo" type="checkbox" />
+                            Remove current photograph
+                        </label>
+                    </div>
+                </div>
+                <div class="event-field event-field-wide event-switches">
+                    <label><input name="is_published" type="checkbox" /> Published</label>
+                </div>
+            </div>
+            <footer class="event-form-actions">
+                <button class="secondary-button" id="cancel-leader-button" type="button">Cancel</button>
+                <button class="secondary-button" id="preview-leader-button" type="button">Preview profile</button>
+                <button class="primary-button" id="save-leader-button" type="submit">
+                    <span class="button-label">Save leader</span>
+                    <span class="button-spinner" aria-hidden="true"></span>
+                </button>
+            </footer>
+        </form>
+    </dialog>
+    <dialog class="event-dialog leader-preview-dialog" id="leader-preview-dialog" aria-labelledby="leader-preview-title">
+        <header class="event-dialog-header">
+            <h2 id="leader-preview-title">Leader preview</h2>
+            <button class="event-icon-button" id="close-leader-preview" type="button" aria-label="Close leader preview">×</button>
+        </header>
+        <div id="leader-preview-content"></div>
     </dialog>
 </body>
 </html>
