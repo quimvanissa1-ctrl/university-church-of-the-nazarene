@@ -9,13 +9,19 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/navbar.css" />
     <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/ministries.css" />
     <script defer src="js/navbar.js"></script>
     <script defer src="js/main.js"></script>
     <script defer src="js/admin-access.js"></script>
+    <script defer src="js/ministries-page.js"></script>
 </head>
 <body>
     <div id="site-header"></div>
-    <main>
+    <main class="ministries-page">
+        <section class="ministries-maintenance" aria-label="Ministries page status">
+            <p role="status">UPDATING.....</p>
+        </section>
+        <template id="ministries-page-content">
         <section class="page-hero">
             <div class="container">
                 <div>
@@ -64,6 +70,7 @@
                 </div>
             </div>
         </section>
+        </template>
     </main>
     <div id="site-footer"></div>
 </body>

@@ -134,9 +134,7 @@ values
                 {"badge": "Mission", "title": "Faith in community", "description": "We exist to know God, love God, and serve God by making Christlike disciples who engage our campus and community with care."},
                 {"badge": "Vision", "title": "Welcoming every person", "description": "To be a warm and active church where everyone finds belonging, encouragement, and spiritual growth in Jesus."},
                 {"badge": "Beliefs", "title": "Grounded in holiness", "description": "We follow the Wesleyan-Holiness tradition, trusting Scripture, grace, and the transforming work of the Holy Spirit."}
-            ],
-            "footer_title": "Modern church, timeless truth",
-            "footer_description": "Our community balances strong worship, compassionate outreach, and youth-friendly discipleship in a way that feels fresh and inviting."
+            ]
         }'::jsonb,
         true
     ),

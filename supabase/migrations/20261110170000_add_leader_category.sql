@@ -10,7 +10,7 @@ alter table public.leaders
     alter column category set default 'church_leaders',
     alter column category set not null;
 
-alter table public.leaders
+alter table public.leaderas
     drop constraint if exists leaders_category_check;
 
 alter table public.leaders

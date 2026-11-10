@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-11T00:01:50.1679582+03:00",
+  "title": "Design System: University Church of the Nazarene",
+  "extensions": {
+    "colorMeta": {
+      "gold": {
+        "role": "primary",
+        "displayName": "Church Gold",
+        "canonical": "#D39512"
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "Worship Green",
+        "canonical": "#14736C"
+      },
+      "blue": {
+        "role": "tertiary",
+        "displayName": "Church Blue",
+        "canonical": "#007799"
+      },
+      "red": {
+        "role": "accent",
+        "displayName": "Church Red",
+        "canonical": "#9D0A0F"
+      },
+      "home-night": {
+        "role": "surface",
+        "displayName": "Homepage Night",
+        "canonical": "#05090c"
+      },
+      "home-paper": {
+        "role": "surface",
+        "displayName": "Warm Paper",
+        "canonical": "#fbfaf6"
+      },
+      "home-ink": {
+        "role": "neutral",
+        "displayName": "Homepage Ink",
+        "canonical": "#17191b"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Welcome",
+        "purpose": "Homepage hero heading."
+      },
+      "headline": {
+        "displayName": "Section heading",
+        "purpose": "Homepage section titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable church and service content."
+      },
+      "label": {
+        "displayName": "Editorial label",
+        "purpose": "Theme and content-category labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shared-header",
+        "value": "0 14px 40px rgba(0, 0, 0, 0.18)",
+        "purpose": "Separate the fixed shared navigation from page content."
+      },
+      {
+        "name": "playlist-frame",
+        "value": "0 18px 40px rgba(0, 0, 0, 0.1)",
+        "purpose": "Softly lift embedded sermon media."
+      }
+    ],
+    "motion": [
+      {
+        "name": "home-horizon-arrive",
+        "value": "1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Reveal the hero horizon line once; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "navigation",
+        "value": "900px"
+      },
+      {
+        "name": "tablet-layout",
+        "value": "800px"
+      },
+      {
+        "name": "mobile-layout",
+        "value": "600px"
+      },
+      {
+        "name": "small-screen-chrome",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Homepage primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Gold pill action for the hero's primary next step.",
+      "html": "<a class=\"btn\">Learn More</a>",
+      "css": ".home-page .hero-actions .btn { min-height: 3.25rem; padding: 0.85rem 1.45rem; border: 1px solid #D39512; border-radius: 999px; background: #D39512; color: #000000; font-weight: 700; text-decoration: none; } .home-page .hero-actions .btn:hover { background: #e5ae38; transform: translateY(-2px); box-shadow: none; }"
+    },
+    {
+      "name": "Homepage secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined white pill action used beside the primary hero action.",
+      "html": "<a class=\"btn\">See Events</a>",
+      "css": ".home-page .hero-actions .btn + .btn { border-color: rgba(255, 255, 255, 0.66); background: transparent; color: #FFFFFF; } .home-page .hero-actions .btn + .btn:hover { border-color: #FFFFFF; background: rgba(255, 255, 255, 0.1); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Dawn Over the Gathering",
+    "overview": "The public site pairs the church's established Georgia typography and brand palette with a calm editorial layout. The homepage moves from a dark horizon into warm paper surfaces, guiding visitors through the church's published content. Use the real church logo and Supabase-managed content as the source of truth; generous spacing and clear headings carry the experience.",
+    "keyCharacteristics": [
+      "Georgia serif typography throughout.",
+      "Brand color used sparingly against dark, white, and warm-paper surfaces.",
+      "Flat editorial sections, thin dividers, and rounded actions.",
+      "Homepage content and visibility remain administrator-editable."
+    ],
+    "rules": [
+      {
+        "name": "The Dawn-to-Day Rule",
+        "body": "Keep the dark horizon in the welcome; let the rest of the homepage remain light, readable, and content-led.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Use the exact church brand colors.",
+      "Preserve the logo, shared navigation and footer, Supabase rendering, and admin editability.",
+      "Respect responsive spacing, visible focus, and reduced-motion behavior."
+    ],
+    "donts": [
+      "Do not restore the removed homepage callout or its dedicated fields.",
+      "Do not hardcode or republish Supabase-managed content to make a section appear.",
+      "Do not add colored glow shadows to homepage actions."
+    ]
+  }
+}

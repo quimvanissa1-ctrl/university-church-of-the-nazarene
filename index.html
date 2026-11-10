@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/navbar.css" />
     <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/homepage.css" />
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="js/supabase-config.js"></script>
     <script defer src="js/homepage-content.js"></script>
@@ -16,25 +17,36 @@
     <script defer src="js/main.js"></script>
     <script defer src="js/admin-access.js"></script>
 </head>
-<body>
+<body class="home-page">
     <div id="site-header"></div>
     <main>
         <section class="hero" data-home-section="hero">
-            <div class="container">
-                <h1>Welcome to University Church of the Nazarene</h1>
-                <p class="subtitle">A Christ-centered community of worship, discipleship, and service at Africa Nazarene University.</p>
-                <a class="btn" href="#about">Learn More</a>
-                <a class="btn" href="events.html">See Events</a>
+            <div class="container hero-layout">
+                <div class="hero-copy">
+                    <h1>Welcome to University Church of the Nazarene</h1>
+                    <p class="subtitle">A Christ-centered community of worship, discipleship, and service at Africa Nazarene University.</p>
+                    <div class="hero-actions">
+                        <a class="btn" href="#about">Learn More</a>
+                        <a class="btn" href="events.html">See Events</a>
+                    </div>
+                </div>
+                <figure class="hero-mark" aria-hidden="true">
+                    <img src="images/mylogo.png" alt="" />
+                </figure>
             </div>
         </section>
 
         <section class="theme-section" data-home-section="theme">
-            <div class="container theme-panel">
-                <span class="theme-label">2025 THEME</span>
-                <h2>Living a Fruitful Life</h2>
-                <p class="theme-verse">“I am the vine; you are the branches. Whoever remains in me and I in him will bear much fruit.”</p>
-                <div class="theme-signature">
-                    <strong>John 15:5</strong>
+            <div class="container theme-layout">
+                <div class="theme-heading">
+                    <span class="theme-label">2025 THEME</span>
+                    <h2>Living a Fruitful Life</h2>
+                </div>
+                <div class="theme-scripture">
+                    <p class="theme-verse">“I am the vine; you are the branches. Whoever remains in me and I in him will bear much fruit.”</p>
+                    <div class="theme-signature">
+                        <strong>John 15:5</strong>
+                    </div>
                 </div>
             </div>
         </section>
@@ -61,46 +73,6 @@
                         <h3>Grounded in holiness</h3>
                         <p>We follow the Wesleyan-Holiness tradition, trusting Scripture, grace, and the transforming work of the Holy Spirit.</p>
                     </article>
-                </div>
-                <div class="about-footer info-panel">
-                    <h3>Modern church, timeless truth</h3>
-                    <p>Our community balances strong worship, compassionate outreach, and youth-friendly discipleship in a way that feels fresh and inviting.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="editorial-section" data-home-section="history">
-            <div class="container">
-                <h2 class="section-title">Our History</h2>
-                <div class="section-copy">
-                    <p>University Church of the Nazarene has a long heritage of gospel ministry, local service, and global compassion. From our earliest days, our congregation has gathered to worship, learn, and reach out with practical love.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="editorial-section" data-home-section="faith_practices">
-            <div class="container">
-                <h2 class="section-title">Our Faith &amp; Practices</h2>
-                <div class="section-copy">
-                    <p>Rooted in Scripture and Wesleyan-Holiness tradition, we believe in grace, holiness, and the transforming power of Jesus Christ. Our worship, prayer, and discipleship practices are designed to grow Christ-like character in every member.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="sermons-section" data-home-section="sermons">
-            <div class="container">
-                <h2 class="section-title">Latest Sermons</h2>
-                <p class="section-intro">Watch our latest sermons and growing collection of messages designed to encourage faith, growth, and spiritual reflection.</p>
-                
-                <div class="playlist-container">
-                    <div class="playlist-frame">
-                        <iframe src="https://www.youtube.com/embed/videoseries?list=PL9Cr-hpTs1T4Z5qNom0YAAy2kB5HZoCOK" title="Church sermons playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-
-                <div class="info-panel playlist-actions">
-                    <p>Discover more messages and subscribe to stay updated with our latest content.</p>
-                    <a class="btn btn-primary" href="#">Visit Our YouTube Channel</a>
                 </div>
             </div>
         </section>
@@ -138,6 +110,42 @@
                 <div class="info-panel">
                     <p><strong>Need more details?</strong> Visit our ministries page to see full ministry offerings and weekly schedules.</p>
                     <a class="btn" href="ministries.html">View Ministries</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="editorial-section home-history" data-home-section="history">
+            <div class="container">
+                <h2 class="section-title">Our History</h2>
+                <div class="section-copy">
+                    <p>University Church of the Nazarene has a long heritage of gospel ministry, local service, and global compassion. From our earliest days, our congregation has gathered to worship, learn, and reach out with practical love.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="editorial-section home-faith" data-home-section="faith_practices">
+            <div class="container">
+                <h2 class="section-title">Our Faith &amp; Practices</h2>
+                <div class="section-copy">
+                    <p>Rooted in Scripture and Wesleyan-Holiness tradition, we believe in grace, holiness, and the transforming power of Jesus Christ. Our worship, prayer, and discipleship practices are designed to grow Christ-like character in every member.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sermons-section" data-home-section="sermons">
+            <div class="container">
+                <h2 class="section-title">Latest Sermons</h2>
+                <p class="section-intro">Watch our latest sermons and growing collection of messages designed to encourage faith, growth, and spiritual reflection.</p>
+
+                <div class="playlist-container">
+                    <div class="playlist-frame">
+                        <iframe src="https://www.youtube.com/embed/videoseries?list=PL9Cr-hpTs1T4Z5qNom0YAAy2kB5HZoCOK" title="Church sermons playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <div class="info-panel playlist-actions">
+                    <p>Discover more messages and subscribe to stay updated with our latest content.</p>
+                    <a class="btn btn-primary" href="#">Visit Our YouTube Channel</a>
                 </div>
             </div>
         </section>

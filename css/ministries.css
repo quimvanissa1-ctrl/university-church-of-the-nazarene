@@ -1,0 +1,16 @@
+.ministries-maintenance {
+    min-height: clamp(20rem, 55vh, 36rem);
+    display: grid;
+    place-items: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.ministries-maintenance p {
+    margin: 0;
+    color: var(--red);
+    font-size: clamp(1.75rem, 7vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+}

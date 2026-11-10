@@ -86,8 +86,6 @@
             grid.hidden = cards.length === 0;
         }
 
-        setText(section, '.about-footer h3', content.footer_title);
-        setText(section, '.about-footer p', content.footer_description);
     }
 
     function renderEditorialSection(content, sectionId) {

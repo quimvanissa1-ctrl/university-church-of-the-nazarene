@@ -39,9 +39,7 @@
                         { key: 'title', label: 'Card heading' },
                         { key: 'description', label: 'Description', multiline: true }
                     ]
-                },
-                { key: 'footer_title', label: 'Closing panel heading' },
-                { key: 'footer_description', label: 'Closing panel text', multiline: true }
+                }
             ]
         },
         {
