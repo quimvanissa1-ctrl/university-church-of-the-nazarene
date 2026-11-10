@@ -45,6 +45,22 @@
             ]
         },
         {
+            id: 'history',
+            title: 'Our History',
+            fields: [
+                { key: 'title', label: 'Section heading' },
+                { key: 'content', label: 'Paragraph/content', multiline: true }
+            ]
+        },
+        {
+            id: 'faith_practices',
+            title: 'Our Faith & Practices',
+            fields: [
+                { key: 'title', label: 'Section heading' },
+                { key: 'content', label: 'Content', multiline: true }
+            ]
+        },
+        {
             id: 'sermons',
             title: 'Latest Sermons',
             fields: [

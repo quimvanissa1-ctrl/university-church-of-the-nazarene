@@ -436,6 +436,20 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
+.editorial-section .section-title {
+    margin: 0 0 1.25rem;
+    text-align: left;
+}
+
+.editorial-section .section-copy {
+    max-width: 72ch;
+    line-height: 1.75;
+}
+
+.editorial-section .section-copy p {
+    margin: 0;
+}
+
 .about-card .card-badge {
     display: inline-flex;
     align-items: center;
@@ -955,6 +969,245 @@ section {
     margin-top: 1.75rem;
 }
 
+.event-registration-hero .container {
+    max-width: 860px;
+    text-align: center;
+}
+
+.event-registration-hero h1 {
+    max-width: 18ch;
+    margin-inline: auto;
+}
+
+.event-registration-hero p {
+    margin-inline: auto;
+}
+
+.event-registration-section {
+    padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+}
+
+.event-registration-card {
+    width: min(100%, 760px);
+    margin: 0 auto;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid rgba(18, 18, 18, 0.1);
+    border-radius: 1rem;
+    background: var(--surface);
+    box-shadow: 0 16px 38px rgba(18, 18, 18, 0.09);
+}
+
+.event-registration-card-header {
+    margin-bottom: 1.75rem;
+    text-align: center;
+}
+
+.event-registration-card-header h2 {
+    margin: 0 0 0.65rem;
+    color: var(--red);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.event-registration-card-header p {
+    max-width: 60ch;
+    margin: 0 auto;
+    color: var(--medium-gray);
+    line-height: 1.6;
+}
+
+.event-registration-form {
+    display: grid;
+    gap: 1.35rem;
+}
+
+.event-registration-question {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.event-form-question-label {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--dark-gray);
+    line-height: 1.5;
+}
+
+.event-form-question-label small {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.required-marker {
+    color: var(--red);
+    font-weight: 700;
+}
+
+.event-form-question-input {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.event-registration-card input:not([type="radio"]):not([type="checkbox"]),
+.event-registration-card textarea,
+.event-registration-card select {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.72rem 0.85rem;
+    border: 1px solid #c9cfce;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: var(--dark-gray);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.event-registration-card textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.event-registration-card input:focus-visible,
+.event-registration-card textarea:focus-visible,
+.event-registration-card select:focus-visible {
+    border-color: var(--green);
+    outline: 3px solid rgba(20, 115, 108, 0.18);
+    outline-offset: 1px;
+}
+
+.event-registration-card [aria-invalid="true"] {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 0 3px rgba(157, 10, 15, 0.12);
+}
+
+.event-form-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    line-height: 1.5;
+}
+
+.event-form-option input {
+    flex: 0 0 auto;
+    margin-top: 0.28rem;
+    accent-color: var(--green);
+}
+
+.event-registration-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.event-registration-actions .btn {
+    min-width: min(100%, 220px);
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.55rem;
+    background: var(--red);
+    color: var(--white);
+    font-weight: 700;
+    text-align: center;
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+.event-registration-actions .btn:hover:not(:disabled) {
+    background: #7d080c;
+    transform: translateY(-1px);
+}
+
+.event-registration-actions .btn:focus-visible {
+    outline: 3px solid rgba(211, 149, 18, 0.55);
+    outline-offset: 3px;
+}
+
+.event-registration-actions .btn:disabled {
+    cursor: wait;
+    opacity: 0.68;
+}
+
+.event-registration-status {
+    margin: 0 0 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 0.55rem;
+    background: rgba(20, 115, 108, 0.08);
+    color: #155e58;
+    line-height: 1.5;
+}
+
+.event-registration-status.is-error {
+    background: rgba(157, 10, 15, 0.08);
+    color: #8b1014;
+}
+
+.event-registration-response-count {
+    margin: 0 0 1.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(211, 149, 18, 0.32);
+    border-radius: 0.65rem;
+    background: rgba(211, 149, 18, 0.1);
+    color: var(--dark-gray);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.event-registration-response-list {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.event-registration-response {
+    border: 1px solid rgba(18, 18, 18, 0.12);
+    border-radius: 0.65rem;
+    background: #fff;
+}
+
+.event-registration-response summary {
+    padding: 0.9rem 1rem;
+    color: var(--red);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.event-registration-response summary:focus-visible {
+    outline: 3px solid rgba(20, 115, 108, 0.35);
+    outline-offset: 2px;
+}
+
+.event-registration-response dl {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 0.35rem 1rem;
+    margin: 0;
+    padding: 0 1rem 1rem;
+}
+
+.event-registration-response dt {
+    font-weight: 700;
+}
+
+.event-registration-response dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.event-registration-success {
+    padding: 1.5rem;
+    border: 1px solid rgba(20, 115, 108, 0.22);
+    border-radius: 0.75rem;
+    background: rgba(20, 115, 108, 0.07);
+    text-align: center;
+}
+
+.event-registration-success h3 {
+    margin: 0 0 0.5rem;
+    color: var(--green);
+}
+
+.event-registration-success p {
+    margin: 0;
+}
+
 .highlight-box strong,
 .info-panel strong,
 .scripture-box strong {
@@ -969,6 +1222,21 @@ section {
     color: var(--red);
     font-weight: 700;
     font-size: 0.95rem;
+}
+
+@media (max-width: 560px) {
+    .event-registration-card {
+        padding: 1.2rem 1rem;
+    }
+
+    .event-registration-response dl {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+    }
+
+    .event-registration-response dd {
+        margin-bottom: 0.65rem;
+    }
 }
 
 .footer-grid {

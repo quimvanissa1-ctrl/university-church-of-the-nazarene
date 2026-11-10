@@ -90,6 +90,13 @@
         setText(section, '.about-footer p', content.footer_description);
     }
 
+    function renderEditorialSection(content, sectionId) {
+        const section = document.querySelector('[data-home-section="' + sectionId + '"]');
+        if (!section) return;
+        setText(section, '.section-title', content.title);
+        setText(section, '.section-copy p', content.content);
+    }
+
     function renderSermons(content) {
         const section = document.querySelector('[data-home-section="sermons"]');
         if (!section) return;
@@ -290,6 +297,8 @@
         hero: renderHero,
         theme: renderTheme,
         about: renderAbout,
+        history: function (content) { renderEditorialSection(content, 'history'); },
+        faith_practices: function (content) { renderEditorialSection(content, 'faith_practices'); },
         sermons: renderSermons,
         services: renderServices,
         ministries: renderMinistries,

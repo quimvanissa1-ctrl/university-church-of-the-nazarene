@@ -102,11 +102,6 @@
         };
     }
 
-    function getOptionsText(options) {
-        if (!Array.isArray(options)) return '';
-        return options.map(function (option) { return String(option).trim(); }).filter(Boolean).join('\n');
-    }
-
     function moveQuestion(index, delta) {
         const nextIndex = index + delta;
         if (nextIndex < 0 || nextIndex >= state.formQuestions.length) return;
@@ -119,7 +114,7 @@
         const item = document.createElement('div');
         item.className = 'event-form-preview-question';
         const label = document.createElement('p');
-        label.textContent = question.question_text || 'Untitled question';
+        label.textContent = (question.question_text || 'Untitled question') + (question.is_required ? ' *' : '');
         item.appendChild(label);
 
         if (question.description) {
@@ -198,12 +193,21 @@
         state.formQuestions.forEach(function (question, index) {
             const card = document.createElement('div');
             card.className = 'event-form-question-card';
+            card.dataset.questionType = question.question_type;
+
+            const cardHeader = document.createElement('div');
+            cardHeader.className = 'event-form-question-header';
+            const number = document.createElement('span');
+            number.className = 'event-form-question-number';
+            number.textContent = 'Question ' + (index + 1);
+            cardHeader.appendChild(number);
 
             const textField = document.createElement('label');
             textField.className = 'event-field';
             textField.innerHTML = '<span>Question text <span aria-hidden="true">*</span></span>';
             const textInput = document.createElement('input');
             textInput.type = 'text';
+            textInput.dataset.questionText = 'true';
             textInput.value = question.question_text || '';
             textInput.placeholder = 'Type your question';
             textInput.addEventListener('input', function () {
@@ -257,40 +261,65 @@
             });
             descriptionField.appendChild(descriptionInput);
 
-            const optionsField = document.createElement('label');
-            optionsField.className = 'event-field';
+            const optionsField = document.createElement('div');
+            optionsField.className = 'event-field event-form-options';
             const optionsLabel = document.createElement('span');
             optionsLabel.textContent = 'Answer options';
             optionsField.appendChild(optionsLabel);
-            const optionsText = document.createElement('textarea');
-            optionsText.rows = 3;
-            optionsText.value = getOptionsText(question.options);
-            optionsText.placeholder = 'One option per line';
-            optionsText.hidden = !['multiple_choice', 'checkbox', 'dropdown'].includes(question.question_type);
-            optionsText.addEventListener('input', function () {
-                question.options = optionsText.value.split('\n').map(function (option) { return option.trim(); }).filter(Boolean);
+            optionsField.hidden = !['multiple_choice', 'checkbox', 'dropdown'].includes(question.question_type);
+            (question.options || []).forEach(function (option, optionIndex) {
+                const optionRow = document.createElement('div');
+                optionRow.className = 'event-form-option-row';
+                const optionInput = document.createElement('input');
+                optionInput.type = 'text';
+                optionInput.value = option;
+                optionInput.setAttribute('aria-label', 'Answer option ' + (optionIndex + 1));
+                optionInput.addEventListener('input', function () {
+                    question.options[optionIndex] = optionInput.value.trim();
+                });
+                const removeOption = document.createElement('button');
+                removeOption.type = 'button';
+                removeOption.className = 'event-form-icon-button is-danger';
+                removeOption.textContent = 'Remove';
+                removeOption.setAttribute('aria-label', 'Remove answer option ' + (optionIndex + 1));
+                removeOption.addEventListener('click', function () {
+                    question.options.splice(optionIndex, 1);
+                    renderEventFormBuilder();
+                });
+                optionRow.append(optionInput, removeOption);
+                optionsField.appendChild(optionRow);
             });
-            optionsField.appendChild(optionsText);
+            const addOption = document.createElement('button');
+            addOption.type = 'button';
+            addOption.className = 'event-form-add-option';
+            addOption.textContent = 'Add option';
+            addOption.addEventListener('click', function () {
+                question.options.push('Option ' + (question.options.length + 1));
+                renderEventFormBuilder();
+            });
+            optionsField.appendChild(addOption);
 
             const actions = document.createElement('div');
             actions.className = 'event-form-question-actions';
             const moveUp = document.createElement('button');
             moveUp.type = 'button';
-            moveUp.className = 'secondary-button';
-            moveUp.textContent = '↑';
+            moveUp.className = 'event-form-icon-button';
+            moveUp.textContent = 'Move up';
             moveUp.title = 'Move question up';
+            moveUp.setAttribute('aria-label', 'Move question ' + (index + 1) + ' up');
             moveUp.disabled = index === 0;
             moveUp.addEventListener('click', function () { moveQuestion(index, -1); });
             const moveDown = document.createElement('button');
             moveDown.type = 'button';
-            moveDown.className = 'secondary-button';
-            moveDown.textContent = '↓';
+            moveDown.className = 'event-form-icon-button';
+            moveDown.textContent = 'Move down';
             moveDown.title = 'Move question down';
+            moveDown.setAttribute('aria-label', 'Move question ' + (index + 1) + ' down');
             moveDown.disabled = index === state.formQuestions.length - 1;
             moveDown.addEventListener('click', function () { moveQuestion(index, 1); });
             const deleteButton = document.createElement('button');
             deleteButton.type = 'button';
-            deleteButton.className = 'secondary-button';
+            deleteButton.className = 'event-form-icon-button is-danger';
             deleteButton.textContent = 'Delete';
             deleteButton.addEventListener('click', function () {
                 state.formQuestions.splice(index, 1);
@@ -299,7 +328,7 @@
             });
             actions.append(moveUp, moveDown, deleteButton);
 
-            card.append(textField, meta, descriptionField, optionsField, actions);
+            card.append(cardHeader, textField, meta, descriptionField, optionsField, actions);
             elements.builderQuestions.appendChild(card);
         });
     }
@@ -326,6 +355,7 @@
         return questions.map(function (question, index) {
             const optionValues = Array.isArray(question.options) ? question.options : [];
             return {
+                id: question.id,
                 question_text: String(question.question_text || '').trim(),
                 description: String(question.description || '').trim(),
                 question_type: question.question_type || 'short_answer',
@@ -342,7 +372,9 @@
             const text = String(question.question_text || '').trim();
             if (!text) return true;
             if (['multiple_choice', 'checkbox', 'dropdown'].includes(question.question_type)) {
-                const options = Array.isArray(question.options) ? question.options : [];
+                const options = Array.isArray(question.options)
+                    ? question.options.map(function (option) { return String(option || '').trim(); }).filter(Boolean)
+                    : [];
                 return options.length < 2;
             }
             return false;
@@ -355,17 +387,18 @@
         const normalizedQuestions = buildFormPayload(questions);
         let formResult;
         if (existingFormId) {
-            formResult = await client.from('event_forms').update({ title: formTitle, description: 'Registered attendees will answer the questions below.', is_published: true, updated_at: new Date().toISOString() }).eq('id', existingFormId).select().single();
+            formResult = await client.from('event_forms').update({ event_id: eventId, title: formTitle, description: 'Registered attendees will answer the questions below.', is_published: true, updated_at: new Date().toISOString() }).eq('id', existingFormId).select().single();
         } else {
             formResult = await client.from('event_forms').insert([{ event_id: eventId, title: formTitle, description: 'Registered attendees will answer the questions below.', is_published: true }]).select().single();
         }
         if (formResult.error) throw formResult.error;
         const formId = formResult.data.id;
-        const removeResult = await client.from('event_form_questions').delete().eq('form_id', formId);
-        if (removeResult.error) throw removeResult.error;
-        if (normalizedQuestions.length) {
+        try {
+            const currentResult = await client.from('event_form_questions').select('id').eq('form_id', formId);
+            if (currentResult.error) throw currentResult.error;
             const rows = normalizedQuestions.map(function (question) {
                 return {
+                    id: question.id,
                     form_id: formId,
                     question_text: question.question_text,
                     description: question.description || null,
@@ -375,8 +408,24 @@
                     display_order: question.display_order
                 };
             });
-            const insertResult = await client.from('event_form_questions').insert(rows);
-            if (insertResult.error) throw insertResult.error;
+            if (rows.length) {
+                const saveResult = await client.from('event_form_questions').upsert(rows, { onConflict: 'id' });
+                if (saveResult.error) throw saveResult.error;
+            }
+            const retainedIds = new Set(rows.map(function (question) { return question.id; }));
+            const removedIds = (currentResult.data || [])
+                .map(function (question) { return question.id; })
+                .filter(function (id) { return !retainedIds.has(id); });
+            if (removedIds.length) {
+                const removeResult = await client.from('event_form_questions').delete().in('id', removedIds);
+                if (removeResult.error) throw removeResult.error;
+            }
+        } catch (error) {
+            if (!existingFormId) {
+                const cleanupResult = await client.from('event_forms').delete().eq('id', formId);
+                if (cleanupResult.error) console.error('Unable to remove a newly created event form after question saving failed:', cleanupResult.error);
+            }
+            throw error;
         }
         return formId;
     }
@@ -534,7 +583,7 @@
             elements.form.elements.registration_method.value = event.registration_method || 'external_link';
             state.formQuestions = (event.event_form_questions || []).map(function (question) {
                 return {
-                    id: crypto.randomUUID(),
+                    id: question.id || crypto.randomUUID(),
                     question_text: question.question_text || '',
                     description: question.description || '',
                     question_type: question.question_type || 'short_answer',
@@ -634,6 +683,7 @@
         const eventId = currentEvent ? currentEvent.id : crypto.randomUUID();
         const previousPoster = getPosterPath(currentEvent && currentEvent.poster_url);
         let newPosterPath = null;
+        let eventPersisted = false;
 
         try {
             if (posterFile) {
@@ -653,8 +703,6 @@
 
             let existingFormId = currentEvent && currentEvent.form_id ? currentEvent.form_id : null;
             if (values.registration_method === 'internal_form') {
-                const formTitle = (values.title || 'Event') + ' Registration';
-                existingFormId = await saveEventFormRecord(eventId, formTitle, existingFormId, state.formQuestions);
                 values.form_id = existingFormId;
                 values.registration_url = null;
             } else {
@@ -662,8 +710,29 @@
                 values.registration_url = values.registration_url || null;
             }
 
-            const result = currentEvent ? await client.from('events').update(values).eq('id', eventId).select().single() : await client.from('events').insert([{ id: eventId, ...values }]).select().single();
+            const result = currentEvent
+                ? await client.from('events').update(values).eq('id', eventId).select().single()
+                : await client.from('events').insert([{ id: eventId, ...values }]).select().single();
             if (result.error) throw result.error;
+            let savedEvent = result.data;
+            eventPersisted = true;
+            state.editingEvent = savedEvent;
+            if (!currentEvent) {
+                elements.dialogTitle.textContent = 'Edit event';
+                elements.saveButton.dataset.idleLabel = 'Save changes';
+                const label = elements.saveButton.querySelector('.button-label');
+                if (label) label.textContent = elements.saveButton.dataset.idleLabel;
+            }
+
+            if (values.registration_method === 'internal_form') {
+                const formTitle = (values.title || 'Event') + ' Registration';
+                existingFormId = await saveEventFormRecord(eventId, formTitle, existingFormId, state.formQuestions);
+                state.editingEvent.form_id = existingFormId;
+                const linkResult = await client.from('events').update({ form_id: existingFormId }).eq('id', eventId).select().single();
+                if (linkResult.error) throw linkResult.error;
+                savedEvent = linkResult.data;
+                state.editingEvent = savedEvent;
+            }
 
             const shouldRemoveOldPoster = previousPoster && (newPosterPath || elements.form.elements.remove_poster.checked) && previousPoster !== newPosterPath;
             const cleanupError = shouldRemoveOldPoster ? await removePosterIfUnused(previousPoster, eventId) : null;
@@ -676,7 +745,7 @@
                 showMessage(elements.feedback, 'Event saved, but the events list could not be refreshed.', true);
             }
         } catch (error) {
-            if (newPosterPath) {
+            if (newPosterPath && !eventPersisted) {
                 const cleanupError = await removePoster(newPosterPath);
                 if (cleanupError) console.error('Unable to remove a poster uploaded for an event that was not saved:', cleanupError);
             }
@@ -744,7 +813,23 @@
         const record = state.events.find(function (item) { return item.id === button.dataset.eventId; });
         if (!record) return;
 
-        if (button.dataset.action === 'edit') openEventDialog(record);
+        if (button.dataset.action === 'edit') {
+            try {
+                if (record.registration_method === 'internal_form' && record.form_id) {
+                    const questionResult = await client
+                        .from('event_form_questions')
+                        .select('*')
+                        .eq('form_id', record.form_id)
+                        .order('display_order', { ascending: true });
+                    if (questionResult.error) throw questionResult.error;
+                    record.event_form_questions = questionResult.data || [];
+                }
+                openEventDialog(record);
+            } catch (error) {
+                console.error('Unable to load event registration questions for editing:', error);
+                showMessage(elements.feedback, error.message || 'The event form could not be loaded for editing.', true);
+            }
+        }
         else if (button.dataset.action === 'publish') await updateEvent(record.id, { is_published: !record.is_published });
         else if (button.dataset.action === 'feature') await updateEvent(record.id, { is_featured: !record.is_featured });
         else if (button.dataset.action === 'delete') await deleteEvent(record);
@@ -796,7 +881,13 @@
             else if (state.editingEvent && state.editingEvent.poster_url) showPosterPreview(getPosterUrl(state.editingEvent.poster_url), true);
         });
         elements.form.elements.registration_method.forEach(function (input) { input.addEventListener('change', syncRegistrationFields); });
-        elements.addQuestionButton.addEventListener('click', function () { state.formQuestions.push(createEmptyQuestion()); renderEventFormBuilder(); });
+        elements.addQuestionButton.addEventListener('click', function () {
+            state.formQuestions.push(createEmptyQuestion());
+            renderEventFormBuilder();
+            const questionInputs = elements.builderQuestions.querySelectorAll('[data-question-text]');
+            const lastInput = questionInputs[questionInputs.length - 1];
+            if (lastInput) lastInput.focus();
+        });
         elements.previewButton.addEventListener('click', function () {
             const formBuilderError = validateBuilderQuestions();
             if (formBuilderError) { showMessage(elements.formMessage, formBuilderError, true); return; }
@@ -845,68 +936,125 @@
         if (!formList || !notice || !client) return;
         formList.setAttribute('aria-busy', 'true');
         notice.hidden = true;
-        const { data, error } = await client.from('event_forms').select('*').order('created_at', { ascending: false });
-        formList.setAttribute('aria-busy', 'false');
-        if (error) {
-            formList.replaceChildren();
-            showMessage(notice, error.message || 'The event forms could not be loaded.', true);
-            return;
-        }
-        if (!data || !data.length) {
-            formList.innerHTML = '<p class="events-empty-state">No event forms yet. Create one while adding an event.</p>';
-            return;
-        }
-
-        const eventIds = [...new Set(data.map(function (item) { return item.event_id; }).filter(Boolean))];
-        let events = [];
-        if (eventIds.length) {
-            const eventResult = await client.from('events').select('id, title').in('id', eventIds);
-            if (!eventResult.error) events = eventResult.data || [];
-        }
-        const eventMap = new Map(events.map(function (item) { return [item.id, item.title]; }));
         formList.replaceChildren();
-        for (const form of data) {
-            const card = document.createElement('article');
-            card.className = 'event-row';
-            const details = document.createElement('div');
-            details.className = 'event-row-details';
-            const title = document.createElement('h3');
-            title.textContent = form.title || 'Untitled event form';
-            const eventTitle = document.createElement('p');
-            eventTitle.textContent = 'Event: ' + (eventMap.get(form.event_id) || 'Unknown event');
-            const responseCount = document.createElement('p');
-            responseCount.textContent = 'Responses: loading…';
-            details.append(title, eventTitle, responseCount);
+        let loadError = null;
+        try {
+            const formResult = await client.from('event_forms').select('*').order('created_at', { ascending: false });
+            if (formResult.error) throw formResult.error;
+            const forms = formResult.data || [];
+            if (!forms.length) {
+                const emptyState = document.createElement('p');
+                emptyState.className = 'events-empty-state';
+                emptyState.textContent = 'No event forms yet. Create one while adding an event.';
+                formList.appendChild(emptyState);
+                return;
+            }
 
-            const actions = document.createElement('div');
-            actions.className = 'event-row-actions';
-            const editButton = document.createElement('button');
-            editButton.type = 'button';
-            editButton.className = 'event-action-button';
-            editButton.textContent = 'Edit Form';
-            editButton.onclick = async function () {
-                const eventResult = await client.from('events').select('*').eq('form_id', form.id).maybeSingle();
-                if (eventResult.data) {
-                    const questionResult = await client.from('event_form_questions').select('*').eq('form_id', form.id).order('display_order', { ascending: true });
-                    if (!questionResult.error) eventResult.data.event_form_questions = questionResult.data || [];
-                    openEventDialog(eventResult.data);
+            const eventIds = [...new Set(forms.map(function (item) { return item.event_id; }).filter(Boolean))];
+            let events = [];
+            if (eventIds.length) {
+                const eventResult = await client.from('events').select('id, title, is_published, registration_method, form_id').in('id', eventIds);
+                if (eventResult.error) {
+                    console.error('Unable to load events associated with event forms:', eventResult.error);
+                    loadError = 'Some event details could not be loaded.';
+                } else {
+                    events = eventResult.data || [];
                 }
-            };
-            const viewResponses = document.createElement('button');
-            viewResponses.type = 'button';
-            viewResponses.className = 'event-action-button';
-            viewResponses.textContent = 'View Responses';
-            viewResponses.onclick = function () {
-                window.open('event-registration.html?eventId=' + encodeURIComponent(form.event_id) + '&formId=' + encodeURIComponent(form.id) + '&mode=responses', '_blank');
-            };
-            actions.append(editButton, viewResponses);
-            card.append(details, actions);
-            formList.appendChild(card);
+            }
+            const eventMap = new Map(events.map(function (item) { return [item.id, item]; }));
+            const responseCounts = await Promise.all(forms.map(async function (form) {
+                try {
+                    const countResult = await client
+                        .from('event_form_responses')
+                        .select('id', { count: 'exact', head: true })
+                        .eq('form_id', form.id);
+                    if (countResult.error) throw countResult.error;
+                    return typeof countResult.count === 'number' ? countResult.count : null;
+                } catch (error) {
+                    console.error('Unable to count responses for event form ' + form.id + ':', error);
+                    loadError = 'Some response totals could not be loaded.';
+                    return null;
+                }
+            }));
 
-            const responseResult = await client.from('event_form_responses').select('id', { count: 'exact' }).eq('form_id', form.id);
-            if (!responseResult.error && typeof responseResult.count === 'number') responseCount.textContent = 'Responses: ' + responseResult.count;
-            else responseCount.textContent = 'Responses: 0';
+            forms.forEach(function (form, index) {
+                const eventRecord = eventMap.get(form.event_id);
+                const card = document.createElement('article');
+                card.className = 'event-row event-form-admin-card';
+                const details = document.createElement('div');
+                details.className = 'event-row-details';
+                const title = document.createElement('h3');
+                title.textContent = form.title || 'Untitled event form';
+                const eventTitle = document.createElement('p');
+                eventTitle.textContent = 'Event: ' + (eventRecord && eventRecord.title ? eventRecord.title : 'Event details unavailable');
+                const created = document.createElement('p');
+                const createdAt = form.created_at ? new Date(form.created_at) : null;
+                created.textContent = 'Created: ' + (createdAt && !Number.isNaN(createdAt.getTime()) ? createdAt.toLocaleDateString() : 'Date unavailable');
+                const statuses = document.createElement('div');
+                statuses.className = 'event-row-statuses';
+                const registrationStatus = document.createElement('span');
+                const isAvailable = Boolean(form.is_published && eventRecord && eventRecord.is_published &&
+                    eventRecord.registration_method === 'internal_form' && eventRecord.form_id === form.id);
+                registrationStatus.className = 'event-status ' + (isAvailable ? 'is-published' : 'is-draft');
+                registrationStatus.textContent = isAvailable ? 'Registration open' : 'Registration unavailable';
+                statuses.appendChild(registrationStatus);
+                const responseCount = document.createElement('span');
+                responseCount.className = 'event-form-response-count';
+                responseCount.textContent = responseCounts[index] === null
+                    ? 'Response count unavailable'
+                    : responseCounts[index] + (responseCounts[index] === 1 ? ' response' : ' responses');
+                statuses.appendChild(responseCount);
+                details.append(title, eventTitle, created, statuses);
+
+                const actions = document.createElement('div');
+                actions.className = 'event-row-actions';
+                const editButton = document.createElement('button');
+                editButton.type = 'button';
+                editButton.className = 'event-action-button';
+                editButton.textContent = 'Edit Form';
+                editButton.onclick = async function () {
+                    editButton.disabled = true;
+                    try {
+                        const eventResult = await client.from('events').select('*').eq('id', form.event_id).maybeSingle();
+                        if (eventResult.error) throw eventResult.error;
+                        if (!eventResult.data) throw new Error('The event associated with this form could not be found.');
+                        if (eventResult.data.form_id && eventResult.data.form_id !== form.id) {
+                            throw new Error('This form is no longer linked to the selected event.');
+                        }
+                        const questionResult = await client.from('event_form_questions').select('*').eq('form_id', form.id).order('display_order', { ascending: true });
+                        if (questionResult.error) throw questionResult.error;
+                        eventResult.data.form_id = form.id;
+                        eventResult.data.registration_method = 'internal_form';
+                        eventResult.data.event_form_questions = questionResult.data || [];
+                        openEventDialog(eventResult.data);
+                    } catch (error) {
+                        console.error('Unable to open event form for editing:', error);
+                        showMessage(notice, error.message || 'The event form could not be opened for editing.', true);
+                    } finally {
+                        editButton.disabled = false;
+                    }
+                };
+                const viewResponses = document.createElement('button');
+                viewResponses.type = 'button';
+                viewResponses.className = 'event-action-button';
+                viewResponses.textContent = 'View Responses';
+                viewResponses.onclick = function () {
+                    const responseUrl = '../event-registration.html?eventId=' + encodeURIComponent(form.event_id) +
+                        '&formId=' + encodeURIComponent(form.id) + '&mode=responses';
+                    window.open(responseUrl, '_blank', 'noopener');
+                };
+                actions.append(editButton, viewResponses);
+                card.append(details, actions);
+                formList.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Unable to load event forms:', error);
+            formList.replaceChildren();
+            showMessage(notice, error.message || 'The event forms could not be loaded. Check your administrator access and try again.', true);
+        } finally {
+            formList.setAttribute('aria-busy', 'false');
         }
+        if (loadError) showMessage(notice, loadError, true);
     }
 
     window.initializeEventFormsManagement = loadEventForms;

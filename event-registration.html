@@ -18,7 +18,7 @@
 <body>
     <div id="site-header"></div>
     <main>
-        <section class="page-hero">
+        <section class="page-hero event-registration-hero">
             <div class="container">
                 <div>
                     <h1 id="event-registration-title">Event Registration</h1>
@@ -27,12 +27,17 @@
             </div>
         </section>
 
-        <section>
+        <section class="event-registration-section">
             <div class="container">
-                <div class="info-panel">
-                    <p id="event-registration-status" role="status" aria-live="polite"></p>
+                <article class="event-registration-card">
+                    <header class="event-registration-card-header">
+                        <h2 id="event-registration-form-title">Registration Form</h2>
+                        <p id="event-registration-form-description" hidden></p>
+                    </header>
+                    <p class="event-registration-status" id="event-registration-status" role="status" aria-live="polite" hidden></p>
+                    <p class="event-registration-response-count" id="event-registration-response-count" hidden></p>
                     <div id="event-registration-form-container"></div>
-                </div>
+                </article>
             </div>
         </section>
     </main>

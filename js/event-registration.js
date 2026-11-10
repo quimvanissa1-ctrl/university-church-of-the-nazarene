@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const formContainer = document.getElementById('event-registration-form-container');
     const titleEl = document.getElementById('event-registration-title');
     const summaryEl = document.getElementById('event-registration-summary');
+    const formTitleEl = document.getElementById('event-registration-form-title');
+    const formDescriptionEl = document.getElementById('event-registration-form-description');
+    const responseCountEl = document.getElementById('event-registration-response-count');
 
     function setStatus(message, isError) {
         if (!statusEl) return;
@@ -18,7 +21,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function createFieldLabel(question, required) {
-        const label = document.createElement('label');
+        const labelId = 'event-question-label-' + question.id;
+        const label = document.createElement('div');
+        label.id = labelId;
         label.className = 'event-form-question-label';
         const text = document.createElement('strong');
         text.textContent = question.question_text || 'Untitled question';
@@ -33,11 +38,23 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         if (question.description) {
             const description = document.createElement('small');
+            description.id = labelId + '-description';
             description.textContent = question.description;
             label.appendChild(description);
         }
 
         return label;
+    }
+
+    function setQuestionContext(element, question) {
+        const labelId = 'event-question-label-' + question.id;
+        element.setAttribute('aria-labelledby', labelId);
+        if (question.description) {
+            element.setAttribute('aria-describedby', labelId + '-description');
+        }
+        if (question.is_required) {
+            element.setAttribute('aria-required', 'true');
+        }
     }
 
     function buildAnswerInput(question) {
@@ -46,25 +63,29 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         const commonAttributes = {
             name: question.id,
-            'data-question-id': question.id,
             required: Boolean(question.is_required)
         };
 
         if (question.question_type === 'paragraph') {
             const textarea = document.createElement('textarea');
             Object.assign(textarea, commonAttributes);
+            textarea.dataset.questionId = question.id;
+            setQuestionContext(textarea, question);
             textarea.rows = 5;
             inputWrapper.appendChild(textarea);
             return inputWrapper;
         }
 
         if (question.question_type === 'multiple_choice') {
+            inputWrapper.setAttribute('role', 'radiogroup');
+            setQuestionContext(inputWrapper, question);
             const options = Array.isArray(question.options) && question.options.length ? question.options : ['Option 1'];
             options.forEach(function (option) {
                 const optionLabel = document.createElement('label');
                 optionLabel.className = 'event-form-option';
                 const optionInput = document.createElement('input');
                 Object.assign(optionInput, commonAttributes, { type: 'radio', value: option });
+                optionInput.dataset.questionId = question.id;
                 optionInput.name = question.id;
                 optionLabel.append(optionInput, document.createTextNode(' ' + option));
                 inputWrapper.appendChild(optionLabel);
@@ -73,12 +94,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         if (question.question_type === 'checkbox') {
+            inputWrapper.setAttribute('role', 'group');
+            setQuestionContext(inputWrapper, question);
             const options = Array.isArray(question.options) && question.options.length ? question.options : ['Option 1'];
             options.forEach(function (option) {
                 const optionLabel = document.createElement('label');
                 optionLabel.className = 'event-form-option';
                 const optionInput = document.createElement('input');
-                Object.assign(optionInput, commonAttributes, { type: 'checkbox', value: option });
+                Object.assign(optionInput, commonAttributes, { type: 'checkbox', value: option, required: false });
+                optionInput.dataset.questionId = question.id;
                 optionInput.name = question.id + '-' + option.replace(/\s+/g, '-').toLowerCase();
                 optionLabel.append(optionInput, document.createTextNode(' ' + option));
                 inputWrapper.appendChild(optionLabel);
@@ -89,6 +113,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (question.question_type === 'dropdown') {
             const select = document.createElement('select');
             Object.assign(select, commonAttributes, { required: Boolean(question.is_required) });
+            select.dataset.questionId = question.id;
+            setQuestionContext(select, question);
             const blankOption = document.createElement('option');
             blankOption.value = '';
             blankOption.textContent = 'Select an option';
@@ -109,14 +135,20 @@ document.addEventListener('DOMContentLoaded', async function () {
             input.type = 'date';
         } else if (question.question_type === 'number') {
             input.type = 'number';
+            input.step = 'any';
         } else if (question.question_type === 'email') {
             input.type = 'email';
         } else if (question.question_type === 'phone') {
             input.type = 'tel';
+            input.inputMode = 'tel';
+            input.pattern = '[+0-9() .-]{7,24}';
+            input.title = 'Enter a phone number with at least 7 digits.';
         } else {
             input.type = 'text';
         }
         Object.assign(input, commonAttributes);
+        input.dataset.questionId = question.id;
+        setQuestionContext(input, question);
         inputWrapper.appendChild(input);
         return inputWrapper;
     }
@@ -166,32 +198,61 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         try {
             const userResult = await client.auth.getUser();
-            if (userResult.error || !userResult.data?.user) {
+            if (userResult.error) throw userResult.error;
+            const user = userResult.data && userResult.data.user;
+            if (!user) {
                 setStatus('You must be signed in to view event responses.', true);
                 return;
             }
+            const metadata = user.app_metadata || {};
+            const roles = Array.isArray(metadata.roles) ? metadata.roles : [];
+            if (metadata.role !== 'admin' && !roles.includes('admin')) {
+                setStatus('You do not have permission to view event responses.', true);
+                return;
+            }
         } catch (error) {
-            setStatus('You must be signed in to view event responses.', true);
+            console.error('Unable to verify event response access:', error);
+            setStatus('Your access could not be verified. Sign in with an administrator account and try again.', true);
             return;
         }
 
         try {
-            const responseResult = await client
-                .from('event_form_responses')
-                .select('*')
-                .eq('form_id', formData.id)
-                .order('submitted_at', { ascending: false });
+            const responses = [];
+            const responsePageSize = 500;
+            let responseOffset = 0;
+            while (true) {
+                const responseResult = await client
+                    .from('event_form_responses')
+                    .select('id, submitted_at')
+                    .eq('form_id', formData.id)
+                    .order('submitted_at', { ascending: false })
+                    .range(responseOffset, responseOffset + responsePageSize - 1);
+                if (responseResult.error) throw responseResult.error;
+                const responsePage = responseResult.data || [];
+                responses.push.apply(responses, responsePage);
+                if (responsePage.length < responsePageSize) break;
+                responseOffset += responsePageSize;
+            }
 
-            if (responseResult.error) throw responseResult.error;
-
-            const responses = responseResult.data || [];
-            const responseIds = responses.map(function (response) { return response.id; });
             let answers = [];
-
-            if (responseIds.length) {
-                const answerResult = await client.from('event_form_answers').select('*').in('response_id', responseIds);
-                if (answerResult.error) throw answerResult.error;
-                answers = answerResult.data || [];
+            const responseIds = responses.map(function (response) { return response.id; });
+            const answerBatchSize = 50;
+            for (let responseIndex = 0; responseIndex < responseIds.length; responseIndex += answerBatchSize) {
+                const responseIdBatch = responseIds.slice(responseIndex, responseIndex + answerBatchSize);
+                let answerOffset = 0;
+                while (true) {
+                    const answerResult = await client
+                        .from('event_form_answers')
+                        .select('response_id, question_id, question_text, display_order, answer')
+                        .in('response_id', responseIdBatch)
+                        .order('display_order', { ascending: true })
+                        .range(answerOffset, answerOffset + responsePageSize - 1);
+                    if (answerResult.error) throw answerResult.error;
+                    const answerPage = answerResult.data || [];
+                    answers.push.apply(answers, answerPage);
+                    if (answerPage.length < responsePageSize) break;
+                    answerOffset += responsePageSize;
+                }
             }
 
             const answersByResponse = new Map();
@@ -205,42 +266,66 @@ document.addEventListener('DOMContentLoaded', async function () {
             const list = document.createElement('div');
             list.className = 'event-registration-response-list';
 
+            responseCountEl.textContent = 'Total responses: ' + responses.length;
+            responseCountEl.hidden = false;
+            titleEl.textContent = eventData.title || 'Event responses';
+            summaryEl.textContent = 'Review the submitted registrations for this event.';
+            formTitleEl.textContent = 'Response sheet';
+            formDescriptionEl.textContent = 'Form: ' + (formData.title || 'Event registration');
+            formDescriptionEl.hidden = false;
+
             if (!responses.length) {
                 const emptyState = document.createElement('p');
-                emptyState.textContent = 'No responses have been received for this form yet.';
+                emptyState.textContent = 'No responses yet.';
                 list.appendChild(emptyState);
             } else {
+                const questionById = new Map(questions.map(function (question) {
+                    return [question.id, question];
+                }));
                 responses.forEach(function (response, index) {
-                    const submission = document.createElement('article');
+                    const submission = document.createElement('details');
                     submission.className = 'event-registration-response';
-                    const heading = document.createElement('h3');
-                    heading.textContent = 'Submission ' + (index + 1) + ' · ' + new Date(response.submitted_at).toLocaleString();
+                    const heading = document.createElement('summary');
+                    const submittedAt = new Date(response.submitted_at);
+                    heading.textContent = 'Submission ' + (index + 1) + ' · ' +
+                        (Number.isNaN(submittedAt.getTime()) ? 'Date unavailable' : submittedAt.toLocaleString());
                     submission.appendChild(heading);
 
                     const answerList = document.createElement('dl');
-                    questions.forEach(function (question) {
-                        const matchedAnswers = (answersByResponse.get(response.id) || []).filter(function (answer) {
-                            return answer.question_id === question.id;
+                    const responseAnswers = (answersByResponse.get(response.id) || []).slice().sort(function (left, right) {
+                        return (left.display_order || 0) - (right.display_order || 0);
+                    });
+                    const answerItems = responseAnswers.length
+                        ? responseAnswers
+                        : questions.map(function (question) {
+                            return Object.assign({}, question, { answer: null, question_text: question.question_text });
                         });
-                        const answerValue = matchedAnswers.length ? matchedAnswers[0].answer || 'No answer provided' : 'No answer provided';
+                    answerItems.forEach(function (answer) {
+                        const originalQuestion = answer.question_id ? questionById.get(answer.question_id) : null;
                         const term = document.createElement('dt');
-                        term.textContent = question.question_text || 'Untitled question';
+                        term.textContent = answer.question_text || (originalQuestion && originalQuestion.question_text) || 'Question';
                         const detail = document.createElement('dd');
-                        detail.textContent = answerValue;
+                        detail.textContent = answer.answer === null || answer.answer === undefined || answer.answer === ''
+                            ? 'No answer provided'
+                            : answer.answer;
                         answerList.append(term, detail);
                     });
 
+                    if (!answerItems.length) {
+                        const emptyAnswer = document.createElement('dd');
+                        emptyAnswer.textContent = 'No answers were recorded for this submission.';
+                        answerList.appendChild(emptyAnswer);
+                    }
                     submission.appendChild(answerList);
                     list.appendChild(submission);
                 });
             }
 
             formContainer.replaceChildren(list);
-            titleEl.textContent = 'Responses for ' + (formData.title || eventData.title || 'event');
-            summaryEl.textContent = 'Review each submission for this event registration form.';
             setStatus('');
         } catch (error) {
-            setStatus(error.message || 'Unable to load the event responses.', true);
+            console.error('Unable to load event registration responses:', error);
+            setStatus('Responses could not be loaded. Check your administrator access and try again.', true);
         }
     }
 
@@ -252,14 +337,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         const form = document.createElement('form');
         form.id = 'event-registration-form';
+        form.className = 'event-registration-form';
         form.noValidate = true;
 
-        const intro = document.createElement('p');
-        intro.textContent = formData.description || 'Please complete the form to register for this event.';
-        form.appendChild(intro);
-
         questions.forEach(function (question) {
-            form.appendChild(renderQuestion(question));
+            const questionNode = renderQuestion(question);
+            questionNode.addEventListener('input', function (inputEvent) {
+                if (inputEvent.target.removeAttribute) inputEvent.target.removeAttribute('aria-invalid');
+            });
+            questionNode.addEventListener('change', function (inputEvent) {
+                if (inputEvent.target.removeAttribute) inputEvent.target.removeAttribute('aria-invalid');
+            });
+            form.appendChild(questionNode);
         });
 
         const submitArea = document.createElement('div');
@@ -271,40 +360,62 @@ document.addEventListener('DOMContentLoaded', async function () {
         submitArea.appendChild(submitButton);
         form.appendChild(submitArea);
 
+        let isSubmitting = false;
         form.addEventListener('submit', async function (submitEvent) {
             submitEvent.preventDefault();
-            setStatus('', false);
+            if (isSubmitting) return;
 
             const invalidQuestion = questions.find(function (question) {
                 const answer = collectQuestionValue(question, form);
-                return Boolean(question.is_required) && !String(answer || '').trim();
+                if (Boolean(question.is_required) && !String(answer || '').trim()) {
+                    return true;
+                }
+                const controls = Array.from(form.querySelectorAll('[data-question-id="' + question.id + '"]'));
+                const value = String(answer || '').trim();
+                if (!value) return false;
+                if (question.question_type === 'phone') {
+                    const phone = value.replace(/[()\s.-]/g, '');
+                    return !/^\+?[0-9]{7,15}$/.test(phone);
+                }
+                if (question.question_type === 'email' || question.question_type === 'number' || question.question_type === 'date') {
+                    return controls.some(function (control) {
+                        return !control.checkValidity();
+                    });
+                }
+                return false;
             });
 
             if (invalidQuestion) {
-                setStatus('Please complete the required question: ' + (invalidQuestion.question_text || 'Untitled question'), true);
+                const controls = Array.from(form.querySelectorAll('[data-question-id="' + invalidQuestion.id + '"]'));
+                controls.forEach(function (control) { control.setAttribute('aria-invalid', 'true'); });
+                if (controls[0]) controls[0].focus();
+                const message = invalidQuestion.question_type === 'phone'
+                    ? 'Enter a valid phone number for: '
+                    : invalidQuestion.is_required && !String(collectQuestionValue(invalidQuestion, form) || '').trim()
+                        ? 'Please complete the required question: '
+                        : 'Enter a valid answer for: ';
+                setStatus(message + (invalidQuestion.question_text || 'Untitled question'), true);
                 return;
             }
 
+            isSubmitting = true;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting…';
+            form.setAttribute('aria-busy', 'true');
+            setStatus('Submitting your registration…', false);
             try {
-                const responseInsert = await client.from('event_form_responses').insert([{ form_id: formData.id }]).select().single();
-                if (responseInsert.error) throw responseInsert.error;
-
-                const responseId = responseInsert.data.id;
-                const answerRows = questions.map(function (question) {
-                    const answer = collectQuestionValue(question, form);
-                    return {
-                        response_id: responseId,
+                const responseResult = await client.rpc('submit_event_form_response', {
+                    p_form_id: formData.id,
+                    p_answers: questions.map(function (question) {
+                        const answer = collectQuestionValue(question, form);
+                        return {
                         question_id: question.id,
-                        answer: answer && String(answer).trim() ? answer : null
-                    };
-                }).filter(function (answerRow) {
-                    return answerRow.answer !== null;
+                            answer: answer && String(answer).trim() ? String(answer).trim() : null
+                        };
+                    })
                 });
-
-                if (answerRows.length) {
-                    const answerInsert = await client.from('event_form_answers').insert(answerRows);
-                    if (answerInsert.error) throw answerInsert.error;
-                }
+                if (responseResult.error) throw responseResult.error;
+                if (!responseResult.data) throw new Error('The registration service did not confirm the response.');
 
                 form.replaceChildren();
                 const success = document.createElement('div');
@@ -315,16 +426,25 @@ document.addEventListener('DOMContentLoaded', async function () {
                 successCopy.textContent = 'Your response has been recorded for ' + (eventData.title || 'this event') + '.';
                 success.append(successTitle, successCopy);
                 form.appendChild(success);
-                submitButton.disabled = true;
-                setStatus('Your form has been submitted successfully.', false);
+                setStatus('', false);
             } catch (error) {
-                setStatus(error.message || 'Your response could not be submitted. Please try again.', true);
+                console.error('Unable to submit event registration:', error);
+                setStatus('Your registration could not be saved. Please try again.', true);
+                submitButton.disabled = false;
+                submitButton.textContent = eventData.registration_button_text || 'Submit';
+            } finally {
+                isSubmitting = false;
+                form.setAttribute('aria-busy', 'false');
             }
         });
 
         formContainer.replaceChildren(form);
         titleEl.textContent = eventData.title || 'Event Registration';
         summaryEl.textContent = 'Complete the form below to register for this event.';
+        formTitleEl.textContent = formData.title || 'Registration Form';
+        formDescriptionEl.textContent = formData.description || 'Please complete the questions below.';
+        formDescriptionEl.hidden = false;
+        responseCountEl.hidden = true;
         setStatus('');
     }
 
@@ -367,6 +487,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             setStatus('This registration form could not be found.', true);
             return;
         }
+        if (formData.event_id !== eventData.id) {
+            setStatus('This form is not associated with the selected event.', true);
+            return;
+        }
 
         const questionResult = await client
             .from('event_form_questions')
@@ -381,7 +505,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        if (!formData.is_published && eventData.is_published !== true) {
+        if (!eventData.is_published || !formData.is_published ||
+            eventData.registration_method !== 'internal_form' || eventData.form_id !== activeFormId) {
             setStatus('This form is not currently available for registration.', true);
             return;
         }
