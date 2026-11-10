@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/navbar.css" />
     <link rel="stylesheet" href="css/responsive.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="js/supabase-config.js"></script>
     <script defer src="js/navbar.js"></script>
     <script defer src="js/main.js"></script>
     <script defer src="js/admin-access.js"></script>
-    <script defer src="js/events-loader.js"></script>
     <script defer src="js/events-page.js"></script>
 </head>
 <body>
@@ -33,16 +34,13 @@
         <section>
             <div class="container">
                 <h2 class="section-title">Upcoming Events</h2>
-                <div class="grid grid-cols-260" id="featured-events-container">
-                    <!-- Populated by JavaScript -->
-                </div>
+                <p class="events-page-status" id="events-page-status" role="status" aria-live="polite">Loading events…</p>
+                <div class="grid grid-cols-260" id="upcoming-events-container" aria-busy="true"></div>
 
                 <div class="section-divider"></div>
 
-                <h2 class="section-title">All Events</h2>
-                <div class="grid grid-cols-260" id="all-events-container">
-                    <!-- Populated by JavaScript -->
-                </div>
+                <h2 class="section-title">Past Events</h2>
+                <div class="grid grid-cols-260" id="past-events-container"></div>
 
                 <div class="info-panel">
                     <h3>Mark Your Calendar</h3>

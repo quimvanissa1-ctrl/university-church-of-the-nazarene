@@ -314,11 +314,17 @@
                     navItem.classList.toggle('is-active', navItem === item);
                 });
                 const section = item.dataset.section;
+                const isEventsSection = section === 'Events';
+                document.getElementById('placeholder-card').hidden = isEventsSection;
+                document.getElementById('events-management').hidden = !isEventsSection;
                 document.getElementById('section-title').textContent = section;
                 document.getElementById('placeholder-title').textContent = section === 'Dashboard' ? 'Your website workspace' : section;
                 document.getElementById('placeholder-copy').textContent = section === 'Dashboard'
                     ? 'Choose a section from the navigation to manage it. Content tools are not enabled yet.'
                     : 'Management tools for this section will be added after the authentication flow is complete.';
+                if (isEventsSection && typeof window.initializeEventsManagement === 'function') {
+                    window.initializeEventsManagement();
+                }
                 closeSidebar();
             });
         });
