@@ -26,6 +26,37 @@
     outline: 3px solid rgba(0, 119, 153, 0.24);
     outline-offset: 3px;
 }
+.quiz-footer {
+    margin-top: 1.5rem;
+    color: #5c3d2e;
+    font-size: 0.72rem;
+    text-align: center;
+}
+.quiz-footer p {
+    margin: 0;
+}
+.quiz-footer .footer-admin-trigger {
+    display: inline-block;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+}
+.quiz-footer .footer-admin-trigger::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    margin: 4px auto 0;
+    border-radius: 2px;
+    background: rgba(92, 61, 46, 0.6);
+    opacity: 0;
+    transition: width 0.12s ease, opacity 0.12s ease;
+}
+.quiz-footer .footer-admin-trigger.is-holding::after {
+    width: 100%;
+    opacity: 1;
+    transition: width 5s linear, opacity 0.12s ease;
+}
 @media (max-width: 650px) {
     .home-action-bar {
         padding-top: 0.5rem;

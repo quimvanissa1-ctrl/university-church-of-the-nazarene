@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Administration dashboard for University Church of the Nazarene." />
+    <title>Dashboard | University Church of the Nazarene</title>
+    <link rel="stylesheet" href="admin.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="../js/supabase-config.js"></script>
+    <script defer src="admin.js"></script>
+</head>
+<body data-admin-page="dashboard">
+    <div class="dashboard-shell">
+        <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+        <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin navigation">
+            <a class="brand sidebar-brand" href="../index.html">
+                <img src="../images/mylogo.png" alt="" />
+                <span>University Church<br />of the Nazarene</span>
+            </a>
+            <p class="sidebar-label">WEBSITE</p>
+            <nav class="admin-nav" aria-label="Dashboard sections">
+                <button class="nav-item is-active" type="button" data-section="Dashboard">Dashboard</button>
+                <button class="nav-item" type="button" data-section="Homepage">Homepage</button>
+                <button class="nav-item" type="button" data-section="Events">Events</button>
+                <button class="nav-item" type="button" data-section="Announcements">Announcements</button>
+                <button class="nav-item" type="button" data-section="Ministries">Ministries</button>
+                <button class="nav-item" type="button" data-section="Media">Media</button>
+                <button class="nav-item" type="button" data-section="Gallery">Gallery</button>
+                <button class="nav-item" type="button" data-section="Website Settings">Website Settings</button>
+            </nav>
+            <a class="sidebar-website-link" href="../index.html">View public website</a>
+        </aside>
+
+        <div class="dashboard-main">
+            <header class="dashboard-header">
+                <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="admin-sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="admin-identity">
+                    <span class="admin-avatar" aria-hidden="true">UC</span>
+                    <span>
+                        <strong id="admin-email">Administrator</strong>
+                        <small>Church administrator</small>
+                    </span>
+                </div>
+                <button class="logout-button" id="logout-button" type="button">Log out</button>
+            </header>
+
+            <main class="dashboard-content">
+                <h1 id="section-title">Dashboard</h1>
+                <p class="dashboard-welcome">Welcome to the University Church website dashboard.</p>
+                <section class="placeholder-card" aria-live="polite">
+                    <h2 id="placeholder-title">Your website workspace</h2>
+                    <p id="placeholder-copy">Choose a section from the navigation to manage it. Content tools are not enabled yet.</p>
+                    <span class="coming-soon">CONTENT MANAGEMENT COMING SOON</span>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

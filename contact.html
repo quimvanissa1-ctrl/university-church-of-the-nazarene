@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/responsive.css" />
     <script defer src="js/navbar.js"></script>
     <script defer src="js/main.js"></script>
+    <script defer src="js/admin-access.js"></script>
+    <script defer src="js/contact-form.js"></script>
 </head>
 <body>
     <div id="site-header"></div>
@@ -36,10 +38,11 @@
                         <label for="email">Email Address</label>
                         <input id="email" name="email" type="email" required placeholder="you@example.com" />
                         <label for="subject">Subject</label>
-                        <input id="subject" name="subject" type="text" placeholder="Subject" />
+                        <input id="subject" name="subject" type="text" required placeholder="Subject" />
                         <label for="message">Message</label>
                         <textarea id="message" name="message" rows="6" required placeholder="Your message"></textarea>
                         <button class="btn btn-primary" type="submit">Send Message</button>
+                        <p class="form-status" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
