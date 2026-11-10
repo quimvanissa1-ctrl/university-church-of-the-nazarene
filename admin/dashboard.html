@@ -27,6 +27,7 @@
                 <button class="nav-item" type="button" data-section="Homepage">HOME PAGE</button>
                 <button class="nav-item" type="button" data-section="Leaders Management">Leaders Management</button>
                 <button class="nav-item" type="button" data-section="Events">Events</button>
+                <button class="nav-item" type="button" data-section="Event Forms">Event Forms</button>
                 <button class="nav-item" type="button" data-section="Announcements">Announcements</button>
                 <button class="nav-item" type="button" data-section="Ministries">Ministries</button>
                 <button class="nav-item" type="button" data-section="Media">Media</button>
@@ -103,6 +104,16 @@
                     <p class="events-list-status" id="events-list-status" role="status" aria-live="polite">Loading events…</p>
                     <div class="events-list" id="events-list" aria-busy="true"></div>
                 </section>
+                <section id="event-forms-management" aria-labelledby="event-forms-management-title" hidden>
+                    <div class="events-heading">
+                        <div>
+                            <h2 id="event-forms-management-title">Event Forms</h2>
+                            <p>Manage internal event registration forms, question sets, and response totals.</p>
+                        </div>
+                    </div>
+                    <p class="events-feedback" id="event-forms-feedback" role="status" aria-live="polite" hidden></p>
+                    <div class="events-list" id="event-forms-list" aria-busy="true"></div>
+                </section>
                 <section id="leaders-management" aria-labelledby="leaders-management-title" hidden>
                     <div class="leaders-heading">
                         <div>
@@ -155,12 +166,12 @@
                     <input name="title" type="text" maxlength="160" required />
                 </label>
                 <label class="event-field event-field-wide">
-                    <span>Description <span aria-hidden="true">*</span></span>
-                    <textarea name="description" rows="5" maxlength="5000" required></textarea>
+                    <span>Description</span>
+                    <textarea name="description" rows="5" maxlength="5000"></textarea>
                 </label>
                 <label class="event-field">
-                    <span>Event date <span aria-hidden="true">*</span></span>
-                    <input name="event_date" type="date" required />
+                    <span>Event date</span>
+                    <input name="event_date" type="date" />
                 </label>
                 <label class="event-field">
                     <span>Location</span>
@@ -174,11 +185,28 @@
                     <span>End time</span>
                     <input name="end_time" type="time" />
                 </label>
-                <label class="event-field event-field-wide">
-                    <span>Google Forms registration URL</span>
+                <div class="event-field event-field-wide">
+                    <span>Registration method</span>
+                    <div class="event-registration-methods">
+                        <label><input type="radio" name="registration_method" value="external_link" checked /> Use registration link</label>
+                        <label><input type="radio" name="registration_method" value="internal_form" /> Create form</label>
+                    </div>
+                </div>
+                <label class="event-field event-field-wide event-registration-link-field">
+                    <span>Registration link <span aria-hidden="true">*</span></span>
                     <input name="registration_url" type="url" inputmode="url" placeholder="https://forms.gle/…" />
-                    <small>Use a Google Forms link. The form opens on Google when visitors register.</small>
+                    <small>Paste a valid public registration URL, such as Google Forms, Microsoft Forms, or another external form.</small>
                 </label>
+                <div class="event-field event-field-wide event-form-builder" id="event-form-builder" hidden>
+                    <div class="event-form-builder-header">
+                        <span>Event registration form</span>
+                        <button class="secondary-button" type="button" id="add-event-question-button">Add question</button>
+                    </div>
+                    <div class="event-form-builder-questions" id="event-form-builder-questions"></div>
+                    <div class="event-form-builder-preview-actions">
+                        <button class="secondary-button" type="button" id="preview-event-form-button">Preview form</button>
+                    </div>
+                </div>
                 <label class="event-field event-field-wide">
                     <span>Registration button text</span>
                     <input name="registration_button_text" type="text" maxlength="80" value="Register for Event" />
@@ -208,6 +236,18 @@
                 </button>
             </footer>
         </form>
+    </dialog>
+    <dialog class="event-dialog" id="event-form-preview-dialog" aria-labelledby="event-form-preview-title">
+        <div class="event-form" id="event-form-preview">
+            <header class="event-dialog-header">
+                <h2 id="event-form-preview-title">Form preview</h2>
+                <button class="event-icon-button" id="close-event-form-preview-dialog" type="button" aria-label="Close form preview">×</button>
+            </header>
+            <div id="event-form-preview-body" class="event-form-preview-body"></div>
+            <footer class="event-form-actions">
+                <button class="secondary-button" id="close-event-form-preview-button" type="button">Close</button>
+            </footer>
+        </div>
     </dialog>
     <dialog class="event-dialog leader-dialog" id="leader-dialog" aria-labelledby="leader-dialog-title">
         <form class="event-form" id="leader-form" novalidate>

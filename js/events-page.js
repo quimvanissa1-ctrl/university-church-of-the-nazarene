@@ -97,7 +97,18 @@ document.addEventListener('DOMContentLoaded', async function () {
             card.appendChild(location);
         }
 
-        if (event.registration_url) {
+        if (event.registration_method === 'internal_form' && event.form_id) {
+            const actions = document.createElement('div');
+            actions.className = 'card-actions';
+            const registrationLink = document.createElement('a');
+            registrationLink.className = 'btn btn-secondary';
+            registrationLink.href = 'event-registration.html?eventId=' + encodeURIComponent(event.id) + '&formId=' + encodeURIComponent(event.form_id);
+            registrationLink.target = '_blank';
+            registrationLink.rel = 'noopener noreferrer';
+            registrationLink.textContent = event.registration_button_text || 'Register for Event';
+            actions.appendChild(registrationLink);
+            card.appendChild(actions);
+        } else if (event.registration_url) {
             const actions = document.createElement('div');
             actions.className = 'card-actions';
             const registrationLink = document.createElement('a');
@@ -126,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     try {
         result = await client
             .from('events')
-            .select('id, title, description, event_date, start_time, end_time, location, poster_url, registration_url, registration_button_text, is_featured')
+            .select('id, title, description, event_date, start_time, end_time, location, poster_url, registration_method, registration_url, form_id, registration_button_text, is_featured')
             .eq('is_published', true)
             .order('event_date', { ascending: true })
             .order('start_time', { ascending: true });

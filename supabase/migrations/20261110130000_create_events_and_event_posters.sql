@@ -1,16 +1,19 @@
 create table if not exists public.events (
     id uuid primary key default gen_random_uuid(),
     title text not null check (length(btrim(title)) between 1 and 160),
-    description text not null check (length(btrim(description)) between 1 and 5000),
-    event_date date not null,
+    description text check (description is null or length(btrim(description)) between 1 and 5000),
+    event_date date,
     start_time time without time zone,
     end_time time without time zone,
     location text check (location is null or length(location) <= 240),
     poster_url text,
+    registration_method text not null default 'external_link'
+        check (registration_method in ('external_link', 'internal_form')),
     registration_url text check (
         registration_url is null
-        or registration_url ~* '^https://(docs\.google\.com/forms/[^[:space:]]*|forms\.gle/[^[:space:]]*)$'
+        or registration_url ~* '^https?://[^\s]+$'
     ),
+    form_id uuid,
     registration_button_text text not null default 'Register for Event'
         check (length(btrim(registration_button_text)) between 1 and 80),
     is_published boolean not null default false,

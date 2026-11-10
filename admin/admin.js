@@ -351,12 +351,14 @@
                 });
                 const section = item.dataset.section;
                 const isEventsSection = section === 'Events';
+                const isEventFormsSection = section === 'Event Forms';
                 const isHomepageSection = section === 'Homepage';
                 const isLeadersSection = section === 'Leaders Management';
                 const showLeadersManagement = isLeadersSection && canManageLeaders;
                 document.getElementById('placeholder-card').hidden =
-                    isEventsSection || isHomepageSection || showLeadersManagement || (isLeadersSection && !canManageLeaders);
+                    isEventsSection || isEventFormsSection || isHomepageSection || showLeadersManagement || (isLeadersSection && !canManageLeaders);
                 document.getElementById('events-management').hidden = !isEventsSection;
+                document.getElementById('event-forms-management').hidden = !isEventFormsSection;
                 document.getElementById('homepage-management').hidden = !isHomepageSection;
                 document.getElementById('leaders-management').hidden = !showLeadersManagement;
                 document.getElementById('leaders-management-locked').hidden = !isLeadersSection || canManageLeaders;
@@ -367,6 +369,9 @@
                     : 'Management tools for this section will be added after the authentication flow is complete.';
                 if (isEventsSection && typeof window.initializeEventsManagement === 'function') {
                     window.initializeEventsManagement();
+                }
+                if (isEventFormsSection && typeof window.initializeEventFormsManagement === 'function') {
+                    window.initializeEventFormsManagement();
                 }
                 if (isHomepageSection && typeof window.initializeHomepageManagement === 'function') {
                     window.initializeHomepageManagement();
