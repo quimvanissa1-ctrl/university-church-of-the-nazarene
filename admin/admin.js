@@ -13,6 +13,10 @@
             return false;
         }
 
+        if (isAdministrator(user)) {
+            return true;
+        }
+
         if (metadata.role === 'leaders_manager' || (Array.isArray(metadata.roles) && metadata.roles.includes('leaders_manager'))) {
             return true;
         }
@@ -24,7 +28,7 @@
         if (permissions && typeof permissions === 'object') {
             return permissions.leaders_management === true;
         }
-        return isAdministrator(user);
+        return false;
     }
 
     function canAccessDashboard(user) {
