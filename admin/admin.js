@@ -315,8 +315,10 @@
                 });
                 const section = item.dataset.section;
                 const isEventsSection = section === 'Events';
-                document.getElementById('placeholder-card').hidden = isEventsSection;
+                const isHomepageSection = section === 'Homepage';
+                document.getElementById('placeholder-card').hidden = isEventsSection || isHomepageSection;
                 document.getElementById('events-management').hidden = !isEventsSection;
+                document.getElementById('homepage-management').hidden = !isHomepageSection;
                 document.getElementById('section-title').textContent = section;
                 document.getElementById('placeholder-title').textContent = section === 'Dashboard' ? 'Your website workspace' : section;
                 document.getElementById('placeholder-copy').textContent = section === 'Dashboard'
@@ -324,6 +326,9 @@
                     : 'Management tools for this section will be added after the authentication flow is complete.';
                 if (isEventsSection && typeof window.initializeEventsManagement === 'function') {
                     window.initializeEventsManagement();
+                }
+                if (isHomepageSection && typeof window.initializeHomepageManagement === 'function') {
+                    window.initializeHomepageManagement();
                 }
                 closeSidebar();
             });

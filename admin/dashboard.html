@@ -10,6 +10,7 @@
     <script defer src="../js/supabase-config.js"></script>
     <script defer src="admin.js"></script>
     <script defer src="events-management.js"></script>
+    <script defer src="homepage-management.js"></script>
 </head>
 <body data-admin-page="dashboard">
     <div class="dashboard-shell">
@@ -22,7 +23,7 @@
             <p class="sidebar-label">WEBSITE</p>
             <nav class="admin-nav" aria-label="Dashboard sections">
                 <button class="nav-item is-active" type="button" data-section="Dashboard">Dashboard</button>
-                <button class="nav-item" type="button" data-section="Homepage">Homepage</button>
+                <button class="nav-item" type="button" data-section="Homepage">HOME PAGE</button>
                 <button class="nav-item" type="button" data-section="Events">Events</button>
                 <button class="nav-item" type="button" data-section="Announcements">Announcements</button>
                 <button class="nav-item" type="button" data-section="Ministries">Ministries</button>
@@ -55,6 +56,16 @@
                     <h2 id="placeholder-title">Your website workspace</h2>
                     <p id="placeholder-copy">Choose a section from the navigation to manage it. Content tools are not enabled yet.</p>
                     <span class="coming-soon">CONTENT MANAGEMENT COMING SOON</span>
+                </section>
+                <section id="homepage-management" aria-labelledby="homepage-management-title" hidden>
+                    <div class="homepage-heading">
+                        <div>
+                            <h2 id="homepage-management-title">Manage homepage</h2>
+                            <p>Edit the content and visibility of the sections currently shown on your public homepage.</p>
+                        </div>
+                    </div>
+                    <p class="homepage-list-status" id="homepage-list-status" role="status" aria-live="polite" hidden></p>
+                    <div class="homepage-sections" id="homepage-sections" aria-busy="false"></div>
                 </section>
                 <section id="events-management" aria-labelledby="events-management-title" hidden>
                     <div class="events-heading">
@@ -139,7 +150,7 @@
                     <input id="event-poster" name="poster" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
                     <small>Optional image, up to 5 MB.</small>
                     <div class="event-poster-preview" id="event-poster-preview" hidden>
-                        <img id="event-poster-preview-image" alt="Event poster preview" />
+                        <div class="event-poster-preview-image" id="event-poster-preview-image" role="img" aria-label="Event poster preview"></div>
                         <label class="event-remove-poster" id="remove-poster-control" hidden>
                             <input name="remove_poster" type="checkbox" />
                             Remove current poster

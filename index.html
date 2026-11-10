@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/navbar.css" />
     <link rel="stylesheet" href="css/responsive.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="js/supabase-config.js"></script>
+    <script defer src="js/homepage-content.js"></script>
     <script defer src="js/navbar.js"></script>
     <script defer src="js/main.js"></script>
     <script defer src="js/admin-access.js"></script>
@@ -16,7 +19,7 @@
 <body>
     <div id="site-header"></div>
     <main>
-        <section class="hero">
+        <section class="hero" data-home-section="hero">
             <div class="container">
                 <h1>Welcome to University Church of the Nazarene</h1>
                 <p class="subtitle">A Christ-centered community of worship, discipleship, and service at Africa Nazarene University.</p>
@@ -25,7 +28,7 @@
             </div>
         </section>
 
-        <section class="theme-section">
+        <section class="theme-section" data-home-section="theme">
             <div class="container theme-panel">
                 <span class="theme-label">2025 THEME</span>
                 <h2>Living a Fruitful Life</h2>
@@ -36,7 +39,7 @@
             </div>
         </section>
 
-        <section id="about" class="about-area">
+        <section id="about" class="about-area" data-home-section="about">
             <div class="container">
                 <div class="about-header">
                     <h2 class="section-title">About Us</h2>
@@ -66,7 +69,7 @@
             </div>
         </section>
 
-        <section class="sermons-section">
+        <section class="sermons-section" data-home-section="sermons">
             <div class="container">
                 <h2 class="section-title">Latest Sermons</h2>
                 <p class="section-intro">Watch our latest sermons and growing collection of messages designed to encourage faith, growth, and spiritual reflection.</p>
@@ -84,7 +87,7 @@
             </div>
         </section>
 
-        <section id="services">
+        <section id="services" data-home-section="services">
             <div class="container">
                 <h2 class="section-title">Service Times</h2>
                 <p class="section-intro">Experience worship, fellowship, and teaching each week with services and study options for every age.</p>
@@ -121,7 +124,7 @@
             </div>
         </section>
 
-        <section id="ministries">
+        <section id="ministries" data-home-section="ministries">
             <div class="container">
                 <div class="grid grid-cols-260">
                     <article class="card">
@@ -151,7 +154,7 @@
             </div>
         </section>
 
-        <section id="leaders">
+        <section id="leaders" data-home-section="leaders">
             <div class="container">
                 <div class="grid grid-cols-280">
                     <article class="card">
@@ -167,7 +170,7 @@
             </div>
         </section>
 
-        <section id="events">
+        <section id="events" data-home-section="events">
             <div class="container">
                 <article class="card event-card">
                     <div class="event-icon">🥾</div>

@@ -208,7 +208,7 @@
         }
 
         elements.posterPreview.hidden = true;
-        elements.posterPreviewImage.removeAttribute('src');
+        elements.posterPreviewImage.replaceChildren();
         elements.removePosterControl.hidden = true;
         elements.form.elements.remove_poster.checked = false;
     }
@@ -218,7 +218,10 @@
             URL.revokeObjectURL(state.posterObjectUrl);
             state.posterObjectUrl = null;
         }
-        elements.posterPreviewImage.src = url;
+        const image = document.createElement('img');
+        image.src = url;
+        image.alt = 'Event poster preview';
+        elements.posterPreviewImage.replaceChildren(image);
         elements.posterPreview.hidden = false;
         elements.removePosterControl.hidden = !canRemove;
         elements.form.elements.remove_poster.checked = false;
@@ -598,6 +601,7 @@
             elements.posterPreview = document.getElementById('event-poster-preview');
             elements.posterPreviewImage = document.getElementById('event-poster-preview-image');
             elements.publicationFilter = document.getElementById('event-publication-filter');
+            elements.removePosterControl = document.getElementById('remove-poster-control');
             elements.saveButton = document.getElementById('save-event-button');
             elements.search = document.getElementById('event-search');
             elements.status = document.getElementById('events-list-status');
