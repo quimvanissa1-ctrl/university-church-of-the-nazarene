@@ -110,38 +110,71 @@
 
     async function loadLeaders() {
         const status = document.getElementById('leaders-page-status');
-        const grid = document.getElementById('leaders-grid');
-        grid.setAttribute('aria-busy', 'true');
+        const churchSection = document.getElementById('church-leaders-section');
+        const ministriesSection = document.getElementById('ministries-leaders-section');
+        const churchGrid = document.getElementById('church-leaders-grid');
+        const ministriesGrid = document.getElementById('ministries-leaders-grid');
+        [churchGrid, ministriesGrid].forEach(function (grid) {
+            grid.setAttribute('aria-busy', 'true');
+        });
 
         try {
             if (!client) {
                 throw new Error(window.supabaseConfigError || 'Supabase is not configured.');
             }
 
-            const result = await client
+            let result = await client
                 .from('leaders')
-                .select('name, position, biography, department, image_url, email, phone, social_links')
+                .select('name, position, biography, department, category, image_url, email, phone, social_links')
                 .eq('is_published', true)
                 .order('display_order', { ascending: true })
                 .order('created_at', { ascending: true });
+
+            if (result.error && result.error.code === '42703' && /\bcategory\b/i.test(result.error.message || '')) {
+                result = await client
+                    .from('leaders')
+                    .select('name, position, biography, department, image_url, email, phone, social_links')
+                    .eq('is_published', true)
+                    .order('display_order', { ascending: true })
+                    .order('created_at', { ascending: true });
+                if (!result.error) {
+                    result.data = (result.data || []).map(function (leader) {
+                        return Object.assign({}, leader, { category: 'church_leaders' });
+                    });
+                }
+            }
 
             if (result.error) {
                 throw result.error;
             }
 
             const leaders = result.data || [];
-            grid.replaceChildren.apply(grid, leaders.map(renderLeader));
-            status.textContent = leaders.length
+            const churchLeaders = leaders.filter(function (leader) {
+                return leader.category === 'church_leaders';
+            });
+            const ministriesLeaders = leaders.filter(function (leader) {
+                return leader.category === 'ministries_leaders';
+            });
+            churchGrid.replaceChildren.apply(churchGrid, churchLeaders.map(renderLeader));
+            ministriesGrid.replaceChildren.apply(ministriesGrid, ministriesLeaders.map(renderLeader));
+            churchSection.hidden = churchLeaders.length === 0;
+            ministriesSection.hidden = ministriesLeaders.length === 0;
+            status.textContent = churchLeaders.length || ministriesLeaders.length
                 ? ''
                 : 'Our leadership team profiles are coming soon.';
-            status.hidden = leaders.length > 0;
+            status.hidden = Boolean(churchLeaders.length || ministriesLeaders.length);
         } catch (error) {
             console.error('Unable to load published leaders from Supabase.', error);
-            grid.replaceChildren();
+            churchGrid.replaceChildren();
+            ministriesGrid.replaceChildren();
+            churchSection.hidden = true;
+            ministriesSection.hidden = true;
             status.textContent = 'Our leadership profiles are temporarily unavailable. Please try again later.';
             status.hidden = false;
         } finally {
-            grid.setAttribute('aria-busy', 'false');
+            [churchGrid, ministriesGrid].forEach(function (grid) {
+                grid.setAttribute('aria-busy', 'false');
+            });
         }
     }
 

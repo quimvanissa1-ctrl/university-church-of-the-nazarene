@@ -109,13 +109,16 @@
         description.textContent = leader.position + (leader.department ? ' · ' + leader.department : '');
         const statuses = document.createElement('div');
         statuses.className = 'leader-row-statuses';
+        const category = document.createElement('span');
+        category.className = 'leader-status';
+        category.textContent = leader.category === 'ministries_leaders' ? 'Ministries Leaders' : 'Church Leaders';
         const publication = document.createElement('span');
         publication.className = 'leader-status' + (leader.is_published ? ' is-published' : '');
         publication.textContent = leader.is_published ? 'Published' : 'Unpublished';
         const order = document.createElement('span');
         order.className = 'leader-status';
         order.textContent = 'Order ' + leader.display_order;
-        statuses.append(publication, order);
+        statuses.append(category, publication, order);
         details.append(title, description, statuses);
 
         const actions = document.createElement('div');
@@ -253,6 +256,7 @@
             elements.form.elements.position.value = leader.position || '';
             elements.form.elements.biography.value = leader.biography || '';
             elements.form.elements.department.value = leader.department || '';
+            elements.form.elements.category.value = leader.category || 'church_leaders';
             elements.form.elements.display_order.value = leader.display_order;
             elements.form.elements.email.value = leader.email || '';
             elements.form.elements.phone.value = leader.phone || '';
@@ -264,6 +268,7 @@
                 showPhotoPreview(getPhotoUrl(leader.image_url), true);
             }
         } else {
+            elements.form.elements.category.value = '';
             elements.form.elements.display_order.value = nextDisplayOrder();
         }
 
@@ -298,6 +303,7 @@
             position: elements.form.elements.position.value.trim(),
             biography: elements.form.elements.biography.value.trim() || null,
             department: elements.form.elements.department.value.trim() || null,
+            category: elements.form.elements.category.value,
             email: elements.form.elements.email.value.trim() || null,
             phone: elements.form.elements.phone.value.trim() || null,
             social_links: readSocialLinks(elements.form.elements.social_links.value),
@@ -454,8 +460,8 @@
             return;
         }
 
-        if (!values.name || !values.position || !Number.isInteger(values.display_order) || values.display_order < 0) {
-            showMessage(elements.formMessage, 'Enter a name, position, and a non-negative whole-number display order.', true);
+        if (!values.name || !values.position || !['church_leaders', 'ministries_leaders'].includes(values.category) || !Number.isInteger(values.display_order) || values.display_order < 0) {
+            showMessage(elements.formMessage, 'Enter a name and position, select a leadership category, and provide a non-negative whole-number display order.', true);
             state.saving = false;
             elements.saveButton.disabled = false;
             elements.saveButton.classList.remove('is-loading');

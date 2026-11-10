@@ -274,6 +274,14 @@
                     <input name="department" type="text" maxlength="160" />
                 </label>
                 <label class="event-field">
+                    <span>Leadership Category <span aria-hidden="true">*</span></span>
+                    <select name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="church_leaders">Church Leaders</option>
+                        <option value="ministries_leaders">Ministries Leaders</option>
+                    </select>
+                </label>
+                <label class="event-field">
                     <span>Display order</span>
                     <input name="display_order" type="number" min="0" max="2147483647" step="1" required />
                 </label>

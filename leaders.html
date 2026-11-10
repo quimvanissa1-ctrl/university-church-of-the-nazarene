@@ -21,17 +21,17 @@
     <main>
         <!-- Hero removed to keep focus on leader profiles -->
 
-        <section>
+        <p class="leaders-page-status" id="leaders-page-status" role="status" aria-live="polite">Loading leaders…</p>
+        <section id="church-leaders-section" hidden>
             <div class="container">
-                <h2 class="section-title">Leadership Team</h2>
-                <p class="section-intro">Our leadership team is committed to spiritual growth, discipleship, and serving the campus community faithfully.</p>
-                <p class="leaders-page-status" id="leaders-page-status" role="status" aria-live="polite">Loading leaders…</p>
-                <div class="grid grid-cols-280" id="leaders-grid" aria-busy="true"></div>
-                <div class="info-panel">
-                    <h3>Leadership Development</h3>
-                    <p>We aim to develop leaders through mentorship, training, and ministry service. Every member has the opportunity to grow and serve.</p>
-                    <a class="btn" href="contact.html">Connect with Leadership</a>
-                </div>
+                <h2 class="section-title">Church Leaders</h2>
+                <div class="grid grid-cols-280" id="church-leaders-grid" aria-busy="true"></div>
+            </div>
+        </section>
+        <section id="ministries-leaders-section" hidden>
+            <div class="container">
+                <h2 class="section-title">Ministries Leaders</h2>
+                <div class="grid grid-cols-280" id="ministries-leaders-grid" aria-busy="true"></div>
             </div>
         </section>
     </main>
